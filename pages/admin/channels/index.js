@@ -1,6 +1,6 @@
 
 
-import ytkiddAPI from '@/apis/ytkidApi'
+import cabocilAPI from '@/apis/cabocil_api'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import Utils from '@/models/Utils'
@@ -31,7 +31,7 @@ export default function Channels() {
 
   async function GetChannelList(params) {
     try {
-      const response = await ytkiddAPI.GetChannels("", {}, params)
+      const response = await cabocilAPI.GetChannels("", {}, params)
       const body = await response.json()
       if (response.status !== 200) {
         toast.error(`Error getting youtube channels: ${body.data}`)
@@ -55,7 +55,7 @@ export default function Channels() {
         "break_on_exists": breakOnExists
       }
 
-      const response = await ytkiddAPI.PostScrapYoutubeVideos("", {}, scrapParams)
+      const response = await cabocilAPI.PostScrapYoutubeVideos("", {}, scrapParams)
 
       const body = await response.json()
 

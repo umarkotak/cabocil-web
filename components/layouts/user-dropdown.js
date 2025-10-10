@@ -1,6 +1,6 @@
 import { LayoutDashboard, LogOut, Moon, Sun } from "lucide-react"
 import Link from "next/link"
-import ytkiddAPI from '@/apis/ytkidApi';
+import cabocilAPI from '@/apis/cabocil_api';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { toast } from "react-toastify";
@@ -13,7 +13,7 @@ export default function UserDropdown({userData}) {
   const { setTheme } = useTheme()
 
   function Logout() {
-    ytkiddAPI.removeCookie("CK:AT")
+    cabocilAPI.removeCookie("CK:AT")
     toast.success("Logout Successfull")
     router.reload()
   }

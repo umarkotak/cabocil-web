@@ -3,7 +3,7 @@ import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { BirdIcon, BookOpen, BotMessageSquare, BrickWall, CarIcon, Circle, FlowerIcon, MessageCircleQuestion, Puzzle, Worm, WormIcon,  } from 'lucide-react'
 
-import ytkiddAPI from '@/apis/ytkidApi'
+import cabocilAPI from '@/apis/cabocil_api'
 import Utils from '@/models/Utils'
 
 export default function Home() {

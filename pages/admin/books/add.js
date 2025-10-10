@@ -1,4 +1,4 @@
-import ytkiddAPI from "@/apis/ytkidApi"
+import cabocilAPI from "@/apis/cabocil_api"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -115,7 +115,7 @@ export default function DevBooks() {
     formData.append("tags", bookParams.tags) // Added tags to form data
 
     try {
-      const response = await ytkiddAPI.PostFormInsertFromPdf("", {}, formData)
+      const response = await cabocilAPI.PostFormInsertFromPdf("", {}, formData)
 
       if (response.ok) {
         setIsSubmitting(false)

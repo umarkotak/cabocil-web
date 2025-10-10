@@ -1,4 +1,4 @@
-import ytkiddAPI from "@/apis/ytkidApi";
+import cabocilAPI from "@/apis/cabocil_api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,7 @@ import { use, useEffect, useState } from "react";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import { Card, CardContent } from "@/components/ui/card";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import BookCard from "@/components/BookCard";
 
 export default function Books() {
   const [bookList, setBookList] = useState([]);
@@ -134,7 +135,7 @@ export default function Books() {
         return acc;
       }, {});
 
-      const response = await ytkiddAPI.GetBooks("", {}, cleanParams);
+      const response = await cabocilAPI.GetBooks("", {}, cleanParams);
       const body = await response.json();
       if (response.status !== 200) {
         return;
@@ -496,45 +497,7 @@ export default function Books() {
           {/* Books Grid - Modern Tokopedia-style layout */}
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-5 gap-3">
             {bookList.map((oneBook) => (
-              <HoverCard>
-                <HoverCardTrigger asChild>
-                  <Link
-                    href={`/books/${oneBook.slug}/read?page=1`}
-                    key={oneBook.id}
-                    className="group block"
-                  >
-                    <div className="flex h-full flex-col rounded-lg border border-slate-200 bg-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden group-hover:shadow-md group-hover:shadow-accent">
-                      <div className="relative aspect-[2/3] overflow-hidden">
-                        <img
-                          className="h-full w-full object-fit transition-transform duration-300"
-                          src={oneBook.cover_file_url}
-                          alt={`Cover of ${oneBook.title}`}
-                          loading="lazy"
-                        />
-                        {/* <div
-                          className={`absolute top-3 right-3 rounded-full px-2.5 py-1 text-xs font-semibold text-white border border-accent ${
-                            oneBook.is_free ? 'bg-emerald-500' : 'bg-blue-500'
-                          }`}
-                        >
-                          {oneBook.is_free ? 'FREE' : 'PREMIUM'}
-                        </div> */}
-                        {oneBook.is_free && <div class="absolute top-0 right-0 w-24 h-24 overflow-hidden">
-                          <div
-                            class="absolute top-3 right-[-73px] rotate-45 bg-accent text-center text-xs font-semibold w-48 py-1 shadow-md"
-                          >
-                            FREE
-                          </div>
-                        </div>}
-                      </div>
-                    </div>
-                  </Link>
-                </HoverCardTrigger>
-                <HoverCardContent className="w-80">
-                  <div className="flex justify-between gap-4">
-                    {oneBook.title}
-                  </div>
-                </HoverCardContent>
-              </HoverCard>
+              <BookCard key={oneBook.id} oneBook={oneBook} />
             ))}
           </div>
 

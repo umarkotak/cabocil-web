@@ -114,7 +114,7 @@ export default function Home() {
 
     // --- API Call Simulation ---
     // In a real app, you would make your API call here.
-    // const response = await ytkiddAPI.PostAIChat(...)
+    // const response = await cabocilAPI.PostAIChat(...)
     // For now, we simulate a delay and a canned response.
     await new Promise(resolve => setTimeout(resolve, 1500))
     const aiResponseText = "BCA Expo adalah pameran tahunan yang digelar oleh Bank Central Asia (BCA) untuk membantu masyarakat mewujudkan impian seperti memiliki hunian, mobil, dan motor. Acara ini dilaksanakan dalam format hybrid, yaitu offline dan online."

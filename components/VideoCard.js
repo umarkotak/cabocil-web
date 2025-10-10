@@ -11,7 +11,7 @@ import {
 } from "./ui/dropdown-menu"
 import { Button } from "./ui/button"
 import { MoreHorizontal } from "lucide-react"
-import ytkiddAPI from "@/apis/ytkidApi"
+import cabocilAPI from "@/apis/cabocil_api"
 import { toast } from "react-toastify"
 
 export default function VideoCard({
@@ -29,7 +29,7 @@ export default function VideoCard({
   const handleDelete = async () => {
     try {
       setIsDeleting(true)
-      const res = await ytkiddAPI.DeleteVideo("", {}, {
+      const res = await cabocilAPI.DeleteVideo("", {}, {
         youtube_video_id: ytkiddId,
       })
       if (!res.ok) {

@@ -1,4 +1,4 @@
-import ytkiddAPI from "@/apis/ytkidApi";
+import cabocilAPI from "@/apis/cabocil_api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -149,7 +149,7 @@ export default function Books() {
         return acc;
       }, {});
 
-      const response = await ytkiddAPI.GetBooks("", {}, cleanParams);
+      const response = await cabocilAPI.GetBooks("", {}, cleanParams);
       const body = await response.json();
       if (response.status !== 200) {
         return;
@@ -168,7 +168,7 @@ export default function Books() {
 
   async function GetUploadBookStatus() {
     try {
-      const response = await ytkiddAPI.GetUploadBookStatus("", {}, {});
+      const response = await cabocilAPI.GetUploadBookStatus("", {}, {});
 
       const body = await response.json();
 
@@ -246,7 +246,7 @@ export default function Books() {
     if (!confirm("are you sure want to delete this book?")) { return }
 
     try {
-      const response = await ytkiddAPI.DeleteBook("", {}, {
+      const response = await cabocilAPI.DeleteBook("", {}, {
         book_id: bookID
       })
       const body = await response.json();

@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 
-import ytkiddAPI from '@/apis/ytkidApi'
+import cabocilAPI from '@/apis/cabocil_api'
 import VideoCard from '@/components/VideoCard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -35,7 +35,7 @@ export default function AdminChannelEdit() {
 
   async function GetChannelDetail(channelID) {
     try {
-      const responseCh = await ytkiddAPI.GetChannelDetail("", {}, {
+      const responseCh = await cabocilAPI.GetChannelDetail("", {}, {
         channel_id: channelID,
         sort: "id_desc",
       })
@@ -46,7 +46,7 @@ export default function AdminChannelEdit() {
 
       setVideoList(bodyCh.data.videos)
 
-      const responseChd = await ytkiddAPI.GetChannelDetailed("", {}, {
+      const responseChd = await cabocilAPI.GetChannelDetailed("", {}, {
         channel_id: channelID,
       })
       const bodyChd = await responseChd.json()
@@ -76,7 +76,7 @@ export default function AdminChannelEdit() {
       console.warn("PARAMS", params)
       params.active = `${params.active}` == "true"
 
-      const response = await ytkiddAPI.PatchUpdateYoutubeChannel("", {}, params)
+      const response = await cabocilAPI.PatchUpdateYoutubeChannel("", {}, params)
       const body = await response.json()
 
       if (response.status !== 200) {

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Pencil, Eraser, Undo, Redo, Trash2 } from 'lucide-react';
-import ytkiddAPI from '@/apis/ytkidApi';
+import cabocilAPI from '@/apis/cabocil_api';
 import useDebounce from './useDebounce';
 
 const ImageDrawer = ({
@@ -50,7 +50,7 @@ const ImageDrawer = ({
       if (!id) return;
       setIsInitialLoad(true);
       try {
-        const response = await ytkiddAPI.GetUserStroke("", {}, { book_content_id: id });
+        const response = await cabocilAPI.GetUserStroke("", {}, { book_content_id: id });
         if (response.ok) {
           const body = await response.json();
           setStrokes(body.data.strokes || []);
@@ -68,7 +68,7 @@ const ImageDrawer = ({
     const postUserStroke = async () => {
       if (isInitialLoad || !bookContentID || debouncedStrokes.length === 0) return;
       try {
-        await ytkiddAPI.PostUserStroke("", {}, {
+        await cabocilAPI.PostUserStroke("", {}, {
           book_id: bookID,
           book_content_id: bookContentID,
           image_url: imageUrl,

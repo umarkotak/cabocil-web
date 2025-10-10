@@ -1,4 +1,4 @@
-class YtkiddAPI {
+class CabocilAPI {
   constructor() {
     if (typeof(window) !== "undefined" && window.location.protocol === "https:") {
       this.Host = "https://cabocil-api.cabocil.com"
@@ -312,6 +312,6 @@ class YtkiddAPI {
   }
 }
 
-const ytkiddAPI = new YtkiddAPI()
+const cabocilAPI = new CabocilAPI()
 
-export default ytkiddAPI
+export default cabocilAPI

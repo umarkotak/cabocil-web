@@ -1,4 +1,4 @@
-import ytkiddAPI from "@/apis/ytkidApi"
+import cabocilAPI from "@/apis/cabocil_api"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -39,7 +39,7 @@ export default function AddYoutubeChannel() {
       params.break_on_exists = `${params.break_on_exists}` == "true"
       params.max_page = parseInt(params.max_page)
 
-      const response = await ytkiddAPI.PostScrapYoutubeVideos("", {}, params)
+      const response = await cabocilAPI.PostScrapYoutubeVideos("", {}, params)
       const body = await response.json()
 
       if (response.status !== 200) {

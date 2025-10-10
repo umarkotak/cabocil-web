@@ -3,7 +3,7 @@
 import { use, useEffect, useMemo, useState } from "react"
 import Script from "next/script"
 import { Check, Sparkles, Book, Video, FileText, X } from "lucide-react"
-import ytkiddAPI from "@/apis/ytkidApi"
+import cabocilAPI from "@/apis/cabocil_api"
 import { toast } from "react-toastify"
 import { useRouter } from "next/router"
 
@@ -121,7 +121,7 @@ export default function PurchasePage() {
       setLoading(true)
       setError(null)
       try {
-        const res = await ytkiddAPI.GetProducts("", {}, {})
+        const res = await cabocilAPI.GetProducts("", {}, {})
         if (!res.ok) throw new Error(`Failed: ${res.status}`)
         const json = await res.json()
         if (!json.success) throw new Error("API returned success=false")
@@ -179,7 +179,7 @@ export default function PurchasePage() {
 
     try {
       setBusyCode(product.code)
-      const res = await ytkiddAPI.PostCreateOrder(
+      const res = await cabocilAPI.PostCreateOrder(
         "",
         {},
         {
@@ -225,8 +225,8 @@ export default function PurchasePage() {
       {/* Midtrans Snap Script (Optional, can be removed if not using Snap token anywhere else) */}
       <Script
         id="midtrans-snap"
-        src={ytkiddAPI.SnapJSUrl}
-        data-client-key={ytkiddAPI.SnapClientKey}
+        src={cabocilAPI.SnapJSUrl}
+        data-client-key={cabocilAPI.SnapClientKey}
         strategy="afterInteractive"
       />
 

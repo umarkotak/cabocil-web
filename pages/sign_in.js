@@ -15,7 +15,7 @@ import { useRouter } from "next/router"
 import { useState } from "react"
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google'
 import { toast } from "react-toastify"
-import ytkiddAPI from "@/apis/ytkidApi"
+import cabocilAPI from "@/apis/cabocil_api"
 
 const GCID = "218571481520-eg3pfk5m2rtu846e7d90qfoh0a7jsi3d.apps.googleusercontent.com"
 
@@ -24,7 +24,7 @@ export default function SignIn() {
 
   async function PostSignUp(credentialResponse) {
     try {
-      const response = await ytkiddAPI.PostSignIn("", {}, {
+      const response = await cabocilAPI.PostSignIn("", {}, {
         google_credential: credentialResponse.credential
       })
       const body = await response.json()
@@ -36,7 +36,7 @@ export default function SignIn() {
 
       toast.success("Login Successfull")
 
-      ytkiddAPI.SetCookie("CK:AT", body.data.access_token, 0)
+      cabocilAPI.SetCookie("CK:AT", body.data.access_token, 0)
 
       router.push("/home")
 

@@ -30,9 +30,9 @@ export default function BookCard({oneBook}) {
                 >
                   {oneBook.is_free ? 'FREE' : 'PREMIUM'}
                 </div> */}
-                {oneBook.is_free && <div class="absolute top-0 right-0 w-24 h-24 overflow-hidden">
+                {oneBook.is_free && <div className="absolute top-0 right-0 w-24 h-24 overflow-hidden">
                   <div
-                    class="absolute top-3 right-[-73px] rotate-45 bg-accent text-center text-xs font-semibold w-48 py-1 shadow-md"
+                    className="absolute top-3 right-[-73px] rotate-45 bg-accent text-center text-xs font-semibold w-48 py-1 shadow-md"
                   >
                     FREE
                   </div>

@@ -1,6 +1,6 @@
 
 
-import ytkiddAPI from '@/apis/ytkidApi'
+import cabocilAPI from '@/apis/cabocil_api'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import Utils from '@/models/Utils'
@@ -20,7 +20,7 @@ export default function Channels() {
 
   async function GetChannelList(params) {
     try {
-      const response = await ytkiddAPI.GetChannels("", {}, params)
+      const response = await cabocilAPI.GetChannels("", {}, params)
       const body = await response.json()
       if (response.status !== 200) {
         return

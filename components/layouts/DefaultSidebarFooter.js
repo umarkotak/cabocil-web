@@ -34,7 +34,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import Link from "next/link"
-import ytkiddAPI from "@/apis/ytkidApi"
+import cabocilAPI from "@/apis/cabocil_api"
 import { useRouter } from "next/router"
 import { toast } from "react-toastify"
 
@@ -45,7 +45,7 @@ export function DefaultSidebarFooter({
   const { isMobile } = useSidebar()
 
   function Logout() {
-    ytkiddAPI.removeCookie("CK:AT")
+    cabocilAPI.removeCookie("CK:AT")
 
     toast.success("Logout Successfull")
 

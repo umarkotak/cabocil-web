@@ -9,7 +9,7 @@ import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { PlayCircle, BookOpen, RefreshCw, Clock, GalleryHorizontalEnd } from 'lucide-react'
-import ytkiddAPI from '@/apis/ytkidApi'
+import cabocilAPI from '@/apis/cabocil_api'
 import { toast } from 'react-toastify'
 import { useTheme } from 'next-themes'
 
@@ -157,12 +157,12 @@ export default function ActivityBar() {
   const [refreshing, setRefreshing] = useState(false)
 
   const fetchActivities = useCallback(async () => {
-    if (ytkiddAPI.GenAuthToken() === "") { return }
+    if (cabocilAPI.GenAuthToken() === "") { return }
 
     try {
       setLoading((prev) => prev && true)
       setRefreshing((prev) => !prev && !loading ? true : prev)
-      const response = await ytkiddAPI.GetUserActivity('', {}, {
+      const response = await cabocilAPI.GetUserActivity('', {}, {
         limit: 20,
       })
 

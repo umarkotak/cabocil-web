@@ -9,7 +9,7 @@ import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { PlayCircle, BookOpen, RefreshCw, Clock, GalleryHorizontalEnd } from 'lucide-react'
-import ytkiddAPI from '@/apis/ytkidApi'
+import cabocilAPI from '@/apis/cabocil_api'
 import { toast } from 'react-toastify'
 import { useTheme } from 'next-themes'
 
@@ -178,7 +178,7 @@ export default function UserActivitiesPage() {
     try {
       setLoading((prev) => prev && true)
       setRefreshing((prev) => !prev && !loading ? true : prev)
-      const response = await ytkiddAPI.GetUserActivity('', {}, {})
+      const response = await cabocilAPI.GetUserActivity('', {}, {})
 
       if (!response?.ok) throw new Error('Failed to fetch activities')
 

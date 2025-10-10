@@ -20,7 +20,7 @@ import {
 } from "media-chrome/react";
 
 import VideoQuiz from '@/components/VideoQuiz'
-import ytkiddAPI from '@/apis/ytkidApi'
+import cabocilAPI from '@/apis/cabocil_api'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 var minutes = 3.5
@@ -104,7 +104,7 @@ export default function Watch() {
 
   async function GetVideoDetail(videoID) {
     try {
-      const response = await ytkiddAPI.GetVideoDetail("", {}, {
+      const response = await cabocilAPI.GetVideoDetail("", {}, {
         youtube_video_id: videoID,
       })
       const body = await response.json()
@@ -120,7 +120,7 @@ export default function Watch() {
 
   async function GetChannelVideos() {
     try {
-      const response = await ytkiddAPI.GetVideos("", {}, {
+      const response = await cabocilAPI.GetVideos("", {}, {
         limit: 50
       })
       const body = await response.json()
@@ -158,7 +158,7 @@ export default function Watch() {
   }, [])
 
   async function RecordVideoWatchActivity(currentTs, maxTs) {
-    ytkiddAPI.PostUserActivity("", {}, {
+    cabocilAPI.PostUserActivity("", {}, {
       youtube_video_id: videoDetail.id,
       metadata: {
         current_progress: currentTs,

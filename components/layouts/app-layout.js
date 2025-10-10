@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { ChevronLeft, LogInIcon, RefreshCcw } from "lucide-react"
 import Link from "next/link"
 import { useTheme } from "next-themes"
-import ytkiddAPI from '@/apis/ytkidApi';
+import cabocilAPI from '@/apis/cabocil_api';
 import UserDropdown from './user-dropdown';
 
 export default function AppLayout({ children }) {
@@ -76,10 +76,10 @@ export default function AppLayout({ children }) {
   }, [pathName])
 
   async function GetCheckAuth() {
-    if (ytkiddAPI.GenAuthToken() === "") { return }
+    if (cabocilAPI.GenAuthToken() === "") { return }
 
     try {
-      const response = await ytkiddAPI.GetCheckAuth("", {}, {})
+      const response = await cabocilAPI.GetCheckAuth("", {}, {})
       const body = await response.json()
 
       if (response.status !== 200) {
@@ -103,7 +103,7 @@ export default function AppLayout({ children }) {
   }
 
   function Logout() {
-    ytkiddAPI.removeCookie("CK:AT")
+    cabocilAPI.removeCookie("CK:AT")
     toast.success("Logout Successfull")
     router.reload()
   }
@@ -136,7 +136,7 @@ export default function AppLayout({ children }) {
       <AppSidebar userData={userData} isAdmin={isAdmin} />
 
       <div className={`${!isMobile ? open ? "w-[calc(100%-13rem)]": "w-[calc(100%-3rem)]" : "w-full"}`}>
-        <header className={`sticky top-0 flex justify-between shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-10 z-40 backdrop-blur-lg bg-[hsl(43,100%,97%)] dark:bg-[hsl(240,10%,10%)] bg-opacity-80 dark:bg-opacity-80 py-3 pb-2 px-3 border-none`}>
+        <header className={`sticky top-0 flex justify-between shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-10 z-30 backdrop-blur-lg bg-[hsl(43,100%,97%)] dark:bg-[hsl(240,10%,10%)] bg-opacity-80 dark:bg-opacity-80 py-3 pb-2 px-3 border-none`}>
           <div className="flex items-center gap-2">
             {showSidebarTrigger && <SidebarTrigger />}
             <BreadcrumbsButton />

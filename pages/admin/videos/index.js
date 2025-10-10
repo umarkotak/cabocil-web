@@ -1,4 +1,4 @@
-import ytkiddAPI from "@/apis/ytkidApi"
+import cabocilAPI from "@/apis/cabocil_api"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuShortcut, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -19,7 +19,7 @@ export default function AdminChannels() {
 
   async function GetBookList(params) {
     try {
-      const response = await ytkiddAPI.GetBooks("", {}, params)
+      const response = await cabocilAPI.GetBooks("", {}, params)
       const body = await response.json()
       if (response.status !== 200) {
         return
@@ -35,7 +35,7 @@ export default function AdminChannels() {
     if (!confirm("are you sure want to delete this book?")) { return }
 
     try {
-      const response = await ytkiddAPI.DeleteBook("", {}, {
+      const response = await cabocilAPI.DeleteBook("", {}, {
         book_id: bookID
       })
       if (response.status !== 200) {

@@ -11,7 +11,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { X, Plus, Save, ArrowLeft, Upload, Camera } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import ytkiddAPI from '@/apis/ytkidApi';
+import cabocilAPI from '@/apis/cabocil_api';
 import { toast } from 'react-toastify';
 
 export default function EditBookPage() {
@@ -52,7 +52,7 @@ export default function EditBookPage() {
   const fetchBook = async () => {
     try {
       setLoading(true);
-      const response = await ytkiddAPI.GetBookDetail("", {}, { book_id: params.slug });
+      const response = await cabocilAPI.GetBookDetail("", {}, { book_id: params.slug });
 
       if (!response.ok) {
         throw new Error('Failed to fetch book');
@@ -166,7 +166,7 @@ export default function EditBookPage() {
       formData.append('book_id', book.id)
 
       // Make the API call using fetch directly since we need to send FormData
-      const response = await ytkiddAPI.PatchUpdateBookCover("", {}, formData)
+      const response = await cabocilAPI.PatchUpdateBookCover("", {}, formData)
 
       if (!response.ok) {
         throw new Error('Failed to upload cover');
@@ -206,7 +206,7 @@ export default function EditBookPage() {
     try {
       setSaving(true);
 
-      const response = await ytkiddAPI.PatchUpdateBook("", {}, formData)
+      const response = await cabocilAPI.PatchUpdateBook("", {}, formData)
 
       if (!response.ok) {
         throw new Error('Failed to update book');

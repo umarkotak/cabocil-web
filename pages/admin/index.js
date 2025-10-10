@@ -1,4 +1,4 @@
-import ytkiddAPI from "@/apis/ytkidApi"
+import cabocilAPI from "@/apis/cabocil_api"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { BookIcon, ImageIcon, PlayIcon, TvIcon } from "lucide-react"
@@ -25,7 +25,7 @@ export default function Admin() {
   async function GetBookList(params) {
     try {
       params.types = "default"
-      const response = await ytkiddAPI.GetBooks("", {}, params)
+      const response = await cabocilAPI.GetBooks("", {}, params)
       const body = await response.json()
       if (response.status !== 200) {
         return

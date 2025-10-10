@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/router'
 
-import ytkiddAPI from '@/apis/ytkidApi'
+import cabocilAPI from '@/apis/cabocil_api'
 import VideoCard from '@/components/VideoCard'
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -63,7 +63,7 @@ export default function Channel() {
 
     setLoading(true)
     try {
-      const response = await ytkiddAPI.GetChannelDetail("", {}, {
+      const response = await cabocilAPI.GetChannelDetail("", {}, {
         ...queryParams,
         channel_id: channelID,
       })

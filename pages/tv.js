@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import ChannelList from '@/components/ChannelList'
 import VideoCard from '@/components/VideoCard'
 
-import ytkiddAPI from '@/apis/ytkidApi'
+import cabocilAPI from '@/apis/cabocil_api'
 import Utils from '@/models/Utils'
 import { useSearchParams } from 'next/navigation'
 import { HomeIcon, Link } from 'lucide-react'
@@ -43,7 +43,7 @@ export default function Home() {
     try {
       setLoading(true)
 
-      const response = await ytkiddAPI.GetVideos("", {}, {
+      const response = await cabocilAPI.GetVideos("", {}, {
         page: currentPage,
         exclude_ids: currentVideoIDs.join(","),
         sort: "random",
@@ -80,7 +80,7 @@ export default function Home() {
 
   async function GetChannelList(params) {
     try {
-      const response = await ytkiddAPI.GetChannels("", {}, params)
+      const response = await cabocilAPI.GetChannels("", {}, params)
       const body = await response.json()
 
       if (response.status !== 200) {

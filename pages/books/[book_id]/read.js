@@ -1,4 +1,4 @@
-import ytkiddAPI from "@/apis/ytkidApi"
+import cabocilAPI from "@/apis/cabocil_api"
 import { LoadingSpinner } from "@/components/ui/spinner"
 import { ArrowLeft, ArrowRight, FullscreenIcon, PrinterIcon, X, Trash2, EyeIcon } from "lucide-react"
 import Link from "next/link"
@@ -58,7 +58,7 @@ export default function Read() {
     if (bookDetail.id === parseInt(bookID)) { return }
 
     try {
-      const response = await ytkiddAPI.GetBookDetail("", {}, {
+      const response = await cabocilAPI.GetBookDetail("", {}, {
         book_id: bookID
       })
       const body = await response.json()
@@ -114,7 +114,7 @@ export default function Read() {
     setIsDeleting(true)
 
     try {
-      const response = await ytkiddAPI.DeleteBookPages("", {}, {
+      const response = await cabocilAPI.DeleteBookPages("", {}, {
         book_id: bookDetail.id,
         book_content_ids: selectedPageIds
       })
@@ -149,7 +149,7 @@ export default function Read() {
   }, [activePage])
 
   async function RecordBookActivity() {
-    ytkiddAPI.PostUserActivity("", {}, {
+    cabocilAPI.PostUserActivity("", {}, {
       book_id: bookDetail.id,
       book_content_id: 0,
       metadata: {

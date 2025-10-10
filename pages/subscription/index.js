@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronRight, Package, Calendar, DollarSign, CreditCard, AlertCircle, CheckCircle, Clock, Plus, Sparkles, Play, Eye } from 'lucide-react';
-import ytkiddAPI from '@/apis/ytkidApi';
+import cabocilAPI from '@/apis/cabocil_api';
 import Link from 'next/link';
 import Script from 'next/script';
 import { usePathname } from 'next/navigation';
@@ -20,7 +20,7 @@ const SubscriptionIndex = () => {
 
   const fetchOrders = async (page = 1, append = false) => {
     try {
-      const response = await ytkiddAPI.GetOrderList("", {}, {
+      const response = await cabocilAPI.GetOrderList("", {}, {
         limit: 10,
         page: page,
       })
@@ -52,7 +52,7 @@ const SubscriptionIndex = () => {
 
   async function fetchUserSubscription() {
     try {
-      const response = await ytkiddAPI.GetUserSubscription("", {}, {})
+      const response = await cabocilAPI.GetUserSubscription("", {}, {})
 
       if (response.status === 401) {
         return
@@ -186,8 +186,8 @@ const SubscriptionIndex = () => {
     <>
       {/* Load Midtrans Snap.js */}
       <Script
-        src={ytkiddAPI.SnapJSUrl} // Use https://app.midtrans.com/snap/snap.js for production
-        data-client-key={ytkiddAPI.SnapClientKey} // Add your client key to environment variables
+        src={cabocilAPI.SnapJSUrl} // Use https://app.midtrans.com/snap/snap.js for production
+        data-client-key={cabocilAPI.SnapClientKey} // Add your client key to environment variables
         onLoad={() => setSnapLoaded(true)}
         onError={() => console.error('Failed to load Snap.js')}
       />

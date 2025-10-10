@@ -1,4 +1,4 @@
-import ytkiddAPI from "@/apis/ytkidApi";
+import cabocilAPI from "@/apis/cabocil_api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -134,7 +134,7 @@ export default function Workbooks() {
         return acc;
       }, {});
 
-      const response = await ytkiddAPI.GetBooks("", {}, cleanParams);
+      const response = await cabocilAPI.GetBooks("", {}, cleanParams);
       const body = await response.json();
       if (response.status !== 200) {
         return;
@@ -496,7 +496,7 @@ export default function Workbooks() {
           {/* Books Grid - Modern Tokopedia-style layout */}
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-5 gap-3">
             {bookList.map((oneBook) => (
-              <BookCard oneBook={oneBook} />
+              <BookCard key={oneBook.id} oneBook={oneBook} />
             ))}
           </div>
 
