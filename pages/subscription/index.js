@@ -192,7 +192,7 @@ const SubscriptionIndex = () => {
         onError={() => console.error('Failed to load Snap.js')}
       />
 
-      <div className="h-[calc(100vh-70px)] bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 dark:from-purple-950 dark:via-slate-950 dark:to-orange-950 text-slate-900 dark:text-slate-100 overflow-auto">
+      <div className="h-[calc(100vh-70px)] to-orange-50 dark:from-purple-950 dark:via-slate-950 dark:to-orange-950 text-slate-900 dark:text-slate-100 overflow-auto">
         <div className="max-w-4xl mx-auto px-4 py-8">
           {/* Header */}
           <div className="flex flex-col md:flex-row items-center justify-between text-center mb-6">
@@ -228,7 +228,7 @@ const SubscriptionIndex = () => {
               <p className="text-slate-600 dark:text-slate-400 mb-6">Kamu belum melakukan transaksi.</p>
               <Link href="/subscription/package">
                 <button
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-2xl font-medium inline-flex items-center gap-2 transition-all duration-300"
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-2xl font-medium inline-flex items-center gap-2 transition-all duration-300 gap-1"
                 >
                   <Sparkles className="w-5 h-5" />
                   Mulai Berlangganan

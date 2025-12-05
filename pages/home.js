@@ -55,13 +55,24 @@ export default function Home() {
 
         {/* Menu Cards */}
         <div className='mb-16'>
-          <div className='flex items-center gap-3 mb-6'>
-            <div className="p-2 rounded-xl bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400">
-              <Star size={24} />
+          <div className='flex justify-between items-center mb-6'>
+            <div className='flex items-center gap-3'>
+              <div className="p-2 rounded-xl bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400">
+                <Star size={24} />
+              </div>
+              <span className="text-2xl font-bold text-slate-800 dark:text-slate-100">
+                Pilih Petualanganmu
+              </span>
             </div>
-            <span className="text-2xl font-bold text-slate-800 dark:text-slate-100">
-              Pilih Petualanganmu
-            </span>
+
+            <Link href="/subscription/package">
+              <button
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-2xl font-medium inline-flex items-center transition-all duration-300 gap-1"
+              >
+                <Sparkles className="w-5 h-5" />
+                Mulai Berlangganan
+              </button>
+            </Link>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

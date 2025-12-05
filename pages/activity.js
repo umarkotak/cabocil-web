@@ -253,10 +253,10 @@ function EmptyState() {
       </p>
       <div className="mt-6 flex items-center justify-center gap-3">
         <Button asChild variant="secondary">
-          <Link href="/explore">Explore Content</Link>
+          <Link href="/tv">Watch Video Content</Link>
         </Button>
         <Button asChild variant="outline">
-          <Link href="/library">Open Library</Link>
+          <Link href="/workbooks">Work On Logic Challenge</Link>
         </Button>
       </div>
     </div>
