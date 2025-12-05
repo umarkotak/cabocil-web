@@ -6,9 +6,9 @@ import VideoCard from '@/components/VideoCard'
 import cabocilAPI from '@/apis/cabocil_api'
 import Utils from '@/models/Utils'
 import { useSearchParams } from 'next/navigation'
-import { HomeIcon, Link } from 'lucide-react'
+import { Play } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import AdsenseAd from '@/components/AdsenseAd'
+import Link from 'next/link'
 
 export default function Home() {
   const [videoList, setVideoList] = useState([])
@@ -131,49 +131,116 @@ export default function Home() {
     }
   }, [handleScroll])
 
+  // Featured Video is the first one
+  const featuredVideo = videoList.length > 0 ? videoList[0] : null
+  const otherVideos = videoList.length > 0 ? videoList.slice(1) : []
+
   return (
-    <div className="flex flex-col gap-2 w-full">
-      <div className='w-full pb-4'>
-        <div className="flex gap-2 flex-row overflow-auto">
-          {channelList.map((oneChannel) => (
-            <ChannelList
-              key={oneChannel.id}
-              channelId={oneChannel.id}
-              channelImageUrl={oneChannel.image_url}
-              channelName={oneChannel.name}
+    <div className="flex flex-col gap-8 w-full min-h-screen pb-10">
+
+      {/* Featured Video Section */}
+      {featuredVideo && (
+        <div className="w-full relative h-[400px] sm:h-[500px] rounded-3xl overflow-hidden shadow-2xl group border border-slate-200 dark:border-slate-800">
+          <div className="absolute inset-0 bg-black">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={featuredVideo.image_url}
+              alt={featuredVideo.title}
+              className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700"
             />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
+
+          <div className="absolute bottom-0 left-0 p-6 sm:p-10 w-full max-w-3xl space-y-4">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                Sedang Populer
+              </span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-black text-white leading-tight line-clamp-2 drop-shadow-lg">
+              {featuredVideo.title}
+            </h2>
+            <div className="flex items-center gap-3 text-slate-200 font-medium">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={featuredVideo.channel.image_url}
+                className="w-8 h-8 rounded-full border border-white/50"
+                alt={featuredVideo.channel.name}
+              />
+              <span>{featuredVideo.channel.name}</span>
+            </div>
+
+            <div className="pt-4">
+              <Link href={`/watch/${featuredVideo.id}`}>
+                <Button className="rounded-full h-12 px-8 text-lg gap-2 bg-white text-slate-900 hover:bg-slate-100 font-bold shadow-lg shadow-white/10 hover:shadow-xl transition-all hover:-translate-y-1">
+                  <Play className="fill-slate-900" size={20} />
+                  Tonton Sekarang
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Channel List */}
+      <div className='w-full'>
+        <div className="flex items-center justify-between mb-4 px-2">
+          <h3 className="text-xl font-bold dark:text-white text-slate-800">Channel Favorit</h3>
+        </div>
+        <div className="flex gap-4 pb-4 overflow-x-auto scrollbar-hide snap-x w-full">
+          {channelList.map((oneChannel) => (
+            <div key={oneChannel.id} className="snap-start flex-none">
+              <ChannelList
+                channelId={oneChannel.id}
+                channelImageUrl={oneChannel.image_url}
+                channelName={oneChannel.name}
+              />
+            </div>
           ))}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-6">
-        {/* <AdsenseAd /> */}
-        {videoList.map((oneVideo) => (
-          <VideoCard
-            key={oneVideo.id}
-            ytkiddId={oneVideo.id}
-            videoId={oneVideo.id}
-            videoImageUrl={oneVideo.image_url}
-            channelId={oneVideo.channel.id}
-            creatorImageUrl={oneVideo.channel.image_url}
-            shortedVideoTitle={oneVideo.title}
-            creatorName={oneVideo.channel.name}
-            canAction={oneVideo.can_action}
-          />
-        ))}
+      {/* Video Grid */}
+      <div>
+        <div className="flex items-center justify-between mb-6 px-2">
+          <h3 className="text-xl font-bold dark:text-white text-slate-800">
+            Video Terbaru
+          </h3>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-y-8 gap-x-6">
+          {otherVideos.map((oneVideo) => (
+            <VideoCard
+              key={oneVideo.id}
+              ytkiddId={oneVideo.id}
+              videoId={oneVideo.id}
+              videoImageUrl={oneVideo.image_url}
+              channelId={oneVideo.channel.id}
+              creatorImageUrl={oneVideo.channel.image_url}
+              shortedVideoTitle={oneVideo.title}
+              creatorName={oneVideo.channel.name}
+              canAction={oneVideo.can_action}
+            />
+          ))}
+        </div>
+        {loading && (
+          <div className="flex justify-center items-center py-12">
+            <div className="flex flex-col items-center gap-3">
+              <div className="animate-spin rounded-full h-10 w-10 border-4 border-indigo-500 border-t-transparent"></div>
+              <span className="text-slate-500 text-sm font-medium animate-pulse">Memuat video seru...</span>
+            </div>
+          </div>
+        )}
+
+        {!hasMore && videoList.length > 0 && (
+          <div className="text-center py-12">
+            <span className="px-6 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 text-sm font-medium">
+              Kamu sudah melihat semua video! 🎉
+            </span>
+          </div>
+        )}
       </div>
 
-      {loading && (
-        <div className="flex justify-center items-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-        </div>
-      )}
-
-      {!hasMore && videoList.length > 0 && (
-        <div className="text-center py-8 text-gray-500">
-          No more videos to load
-        </div>
-      )}
     </div>
   )
 }

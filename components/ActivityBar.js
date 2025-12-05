@@ -68,7 +68,7 @@ function VideoCard({ activity }) {
   const redirect = data?.redirect_path
 
   return (
-    <Link href={redirect} className='flex-none shadow-md rounded border border-accent overflow-hidden group hover:border-primary'>
+    <Link href={redirect} className='flex-none shadow-md rounded-sm overflow-hidden group border border-secondary hover:border-accent'>
       <div className={`w-[220px] h-[100px]`}>
         <div className="flex flex-row gap-2 h-full">
           <div className="relative flex-none">
@@ -82,16 +82,16 @@ function VideoCard({ activity }) {
             </div>} */}
           </div>
           <div className="flex flex-col justify-between">
-            <p className="text-xs leading-1 line-clamp-2">{title}</p>
+            <p className="text-xs line-clamp-2 pt-1">{title}</p>
 
-            <div className="flex flex-col pb-4">
+            <div className="flex flex-col pb-3">
               <span className='text-xs'>{pct}%</span>
               <span className='text-xs'>lanjut nonton</span>
             </div>
           </div>
         </div>
       </div>
-      <Progress value={pct} className="h-1 rounded-none" />
+      <Progress value={pct} className="h-1.5 rounded-none" />
     </Link>
   )
 }
@@ -106,7 +106,7 @@ function BookCard({ activity }) {
   const redirect = data?.redirect_path || "#"
 
   return (
-    <Link href={redirect} className='flex-none shadow-md rounded border border-accent overflow-hidden group hover:border-primary'>
+    <Link href={redirect} className='flex-none shadow-md rounded-sm overflow-hidden group border border-secondary hover:border-accent'>
       <div className={`w-[220px] h-[100px]`}>
         <div className="flex flex-row gap-2 h-full">
           <div className="relative flex-none">
@@ -120,16 +120,16 @@ function BookCard({ activity }) {
             </div>} */}
           </div>
           <div className="flex flex-col justify-between">
-            <p className="text-xs leading-1 line-clamp-2">{title}</p>
+            <p className="text-xs line-clamp-2 pt-1">{title}</p>
 
-            <div className="flex flex-col pb-4">
+            <div className="flex flex-col pb-3">
               <span className='text-xs'>{progressLabel(current, max)}</span>
               <span className='text-xs'>lanjut baca</span>
             </div>
           </div>
         </div>
       </div>
-      <Progress value={pct} className="h-1 rounded-none" />
+      <Progress value={pct} className="h-1.5 rounded-none" />
     </Link>
   )
 }
@@ -157,8 +157,6 @@ export default function ActivityBar() {
   const [refreshing, setRefreshing] = useState(false)
 
   const fetchActivities = useCallback(async () => {
-    if (cabocilAPI.GenAuthToken() === "") { return }
-
     try {
       setLoading((prev) => prev && true)
       setRefreshing((prev) => !prev && !loading ? true : prev)
@@ -171,8 +169,10 @@ export default function ActivityBar() {
       const payload = await response.json()
       const list = payload?.data?.activities || []
       setActivities(Array.isArray(list) ? list : [])
+
     } catch (err) {
       toast.error(err?.message || 'Something went wrong')
+
     } finally {
       setLoading(false)
       setRefreshing(false)

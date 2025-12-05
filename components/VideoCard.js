@@ -58,6 +58,7 @@ export default function VideoCard({
             onLoad={(e) => {
               if (e.target.width / e.target.height < 1.4) {
                 e.target.src = "/images/no_video.png"
+                setDeleted(true)
               }
             }}
           />

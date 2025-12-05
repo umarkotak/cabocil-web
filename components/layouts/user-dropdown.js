@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { InstallButton } from "../InstallButton";
 import { useTheme } from "next-themes";
 
-export default function UserDropdown({userData}) {
+export default function UserDropdown({ userData }) {
   const router = useRouter()
   const { setTheme } = useTheme()
 
@@ -21,8 +21,8 @@ export default function UserDropdown({userData}) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <div className="flex items-center gap-2 cursor-pointer hover:bg-accent rounded-full">
-          <Avatar className="h-7 w-7 border border-primary">
+        <div className="flex items-center gap-2 cursor-pointer rounded-full">
+          <Avatar className="h-7 w-7 border border-primary hover:border-accent">
             <AvatarImage src={userData.photo_url} alt={userData.name} />
             <AvatarFallback className=""><img src="/images/cookie_kid_logo_circle.png" /></AvatarFallback>
           </Avatar>
@@ -49,11 +49,11 @@ export default function UserDropdown({userData}) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <InstallButton />
+        {/* <InstallButton />
         <DropdownMenuItem onClick={()=>setTheme("light")}><Sun />Light Mode</DropdownMenuItem>
-        <DropdownMenuItem onClick={()=>setTheme("dark")}><Moon />Dark Mode</DropdownMenuItem>
+        <DropdownMenuItem onClick={()=>setTheme("dark")}><Moon />Dark Mode</DropdownMenuItem> */}
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={()=>Logout()}><LogOut />Log out</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => Logout()}><LogOut />Log out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

@@ -49,8 +49,7 @@ export default function App({ Component, pageProps }) {
 
       <ThemeProvider
         attribute="class"
-        defaultTheme="system"
-        enableSystem
+        defaultTheme="light"
       >
         <SidebarProvider
           className={roboto.className}

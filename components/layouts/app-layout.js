@@ -3,29 +3,23 @@ import { usePathname } from "next/navigation"
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar"
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, LogInIcon, RefreshCcw } from "lucide-react"
+import { ChevronLeft, LogInIcon, RefreshCcw, Sun, Moon, Settings2 } from "lucide-react"
 import Link from "next/link"
 import { useTheme } from "next-themes"
 import cabocilAPI from '@/apis/cabocil_api';
 import UserDropdown from './user-dropdown';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { InstallButton } from "../InstallButton";
+
+// refer to ui/sidebar
+const contentWidthOnSideOpen = "w-[calc(100%-16rem)]"
+const contentWidthOnSideClose = "w-[calc(100%-3rem)]"
 
 export default function AppLayout({ children }) {
-  const { resolvedTheme } = useTheme();
+  const { setTheme } = useTheme();
 
   const [isAdmin, setIsAdmin] = useState(false)
   const [userData, setUserData] = useState({})
-
-  useEffect(() => {
-    if (typeof document === 'undefined') return
-    const root = document.documentElement
-    if (resolvedTheme === 'dark') {
-      root.classList.add('dark')
-      localStorage.setItem('theme', 'dark')
-    } else if (resolvedTheme === 'light') {
-      root.classList.remove('dark')
-      localStorage.setItem('theme', 'light')
-    }
-  }, [resolvedTheme])
 
   const pathName = usePathname()
   const { state, open, setOpen, openMobile, setOpenMobile, isMobile, toggleSidebar } = useSidebar()
@@ -51,7 +45,7 @@ export default function AppLayout({ children }) {
 
     // add padding on content / not
     if (
-      ["/home","/activity","/games","/subscription","/subscription/package","/games/maze","/games/golf"].includes(pathName)
+      ["/home", "/activity", "/games", "/subscription", "/subscription/package", "/games/maze", "/games/golf"].includes(pathName)
       || (pathName.includes("/books") && pathName.includes("/read"))
       || (pathName.includes("/workbooks") && pathName.includes("/read"))
     ) {
@@ -113,41 +107,56 @@ export default function AppLayout({ children }) {
 
     // back link
     if (pathName.startsWith("/watch")) {
-      return <Link href="/tv"><Button size="smv2" variant="outline"><ChevronLeft size={8} /> back</Button></Link>
+      return <Link href="/tv"><Button size="sm7" variant="outline"><ChevronLeft size={8} /> back</Button></Link>
     }
 
     if (pathName.includes("/books") && pathName.includes("/read")) {
-      return <Link href="/books"><Button size="smv2" variant="outline"><ChevronLeft size={8} /> back</Button></Link>
+      return <Link href="/books"><Button size="sm7" variant="outline"><ChevronLeft size={8} /> back</Button></Link>
     }
 
     if (pathName.includes("/workbooks") && pathName.includes("/read")) {
-      return <Link href="/workbooks"><Button size="smv2" variant="outline"><ChevronLeft size={8} /> back</Button></Link>
+      return <Link href="/workbooks"><Button size="sm7" variant="outline"><ChevronLeft size={8} /> back</Button></Link>
     }
 
     if (pathName.includes("/games/")) {
-      return <Link href="/games"><Button size="smv2" variant="outline"><ChevronLeft size={8} /> back</Button></Link>
+      return <Link href="/games"><Button size="sm7" variant="outline"><ChevronLeft size={8} /> back</Button></Link>
     }
 
-    return <Link href={pathName}><Button size="smv2" variant="ghost">{pathName}</Button></Link>
+    return <Link href={pathName}><Button size="sm7" variant="ghost">{pathName}</Button></Link>
   }
 
   return (
     <>
       <AppSidebar userData={userData} isAdmin={isAdmin} />
 
-      <div className={`${!isMobile ? open ? "w-[calc(100%-13rem)]": "w-[calc(100%-3rem)]" : "w-full"}`}>
-        <header className={`sticky top-0 flex justify-between shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-10 z-30 backdrop-blur-lg bg-[hsl(43,100%,97%)] dark:bg-[hsl(240,10%,10%)] bg-opacity-80 dark:bg-opacity-80 py-3 pb-2 px-3 border-none`}>
+      <div className={`${!isMobile ? open ? contentWidthOnSideOpen : contentWidthOnSideClose : "w-full"}`}>
+        <header className={`sticky top-0 flex justify-between shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-10 z-30 py-3 pb-2 px-3 bg-sidebar`}>
           <div className="flex items-center gap-2">
             {showSidebarTrigger && <SidebarTrigger />}
             <BreadcrumbsButton />
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon_sm" onClick={() => window.location.reload()}>
+            <Button variant="ghost" size="sm7" onClick={() => window.location.reload()}>
               <RefreshCcw />
             </Button>
-            { userData.guid
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm7"><Settings2 /></Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                side="bottom"
+                align="end"
+                sideOffset={4}
+              >
+                <DropdownMenuItem onClick={()=>setTheme("light")}><Sun />Light Mode</DropdownMenuItem>
+                <DropdownMenuItem onClick={()=>setTheme("dark")}><Moon />Dark Mode</DropdownMenuItem>
+                <InstallButton />
+              </DropdownMenuContent>
+            </DropdownMenu>
+            {userData.guid
               ? <UserDropdown userData={userData} />
-              : <Link href="/sign_in"><Button size="smv2" variant="outline"><LogInIcon size={4} /> sign in</Button></Link>
+              : <Link href="/sign_in"><Button size="sm7" variant="outline"><LogInIcon size={4} /> sign in</Button></Link>
             }
           </div>
         </header>
