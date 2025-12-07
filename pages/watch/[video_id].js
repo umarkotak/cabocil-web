@@ -265,7 +265,7 @@ export default function Watch() {
       </div>
 
       <div id="suggestion-content" className={`flex-none w-full ${openRecomendations ? "md:w-[402px]" : "md:w-[90px]"} flex flex-col gap-5 sm:h-[calc(100vh-60px)] sm:overflow-auto relative`}>
-        <div className='flex sticky top-0 bg-background z-10'>
+        <div className='hidden md:flex sticky top-0 bg-background z-10'>
           <Button size="sm7" onClick={()=>{setOpenRecomendations(!openRecomendations)}}>
             {openRecomendations ? <ChevronRight size={10} /> : <ChevronLeft size={10} />}
           </Button>
