@@ -24,6 +24,8 @@ export default function Books() {
   const [tagOptions, setTagOptions] = useState([]);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [uploadBookStatus, setUploadBookStatus] = useState({});
+  const [selectedBook, setSelectedBook] = useState(null);
+  const [isBookDialogOpen, setIsBookDialogOpen] = useState(false);
 
   // Filter states
   const [selectedTypes, setSelectedTypes] = useState([]);
@@ -264,10 +266,16 @@ export default function Books() {
         sort: sort
       };
       GetBookList(params)
+      setIsBookDialogOpen(false);
     } catch (e) {
       console.error(e)
     }
   }
+
+  const handleBookClick = (book) => {
+    setSelectedBook(book);
+    setIsBookDialogOpen(true);
+  };
 
   return (
     <main className="">
@@ -409,58 +417,20 @@ export default function Books() {
         <div className="flex-1">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
             {bookList.map((oneBook) => (
-              <HoverCard>
-                <HoverCardTrigger asChild>
-                  <Link
-                    href={`/${oneBook.type === "book" ? "books" : "workbooks"}/${oneBook.slug}/read?page=1`}
-                    key={oneBook.id}
-                    className="group block"
-                  >
-                    <div className="flex h-full flex-col rounded-lg border border-slate-200 bg-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden group-hover:shadow-md group-hover:shadow-accent">
-                      <div className="relative aspect-[2/3] overflow-hidden">
-                        <img
-                          className="h-full w-full object-fit transition-transform duration-300"
-                          src={oneBook.cover_file_url}
-                          alt={`Cover of ${oneBook.title}`}
-                          loading="lazy"
-                        />
-                        <div className="absolute top-2 right-2">
-                          <div className="flex items-center justify-end gap-1">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="outline" size="icon_sm"><MoreHorizontal /></Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent className="w-56">
-                                <DropdownMenuGroup>
-                                  <Link href={`/admin/books/${oneBook.id}/edit`}>
-                                    <DropdownMenuItem>
-                                      edit
-                                      <DropdownMenuShortcut><Pencil size={14} /></DropdownMenuShortcut>
-                                    </DropdownMenuItem>
-                                  </Link>
-                                  <DropdownMenuItem onClick={()=>DeleteBook(oneBook.id)}>
-                                    delete
-                                    <DropdownMenuShortcut><Trash size={14} /></DropdownMenuShortcut>
-                                  </DropdownMenuItem>
-                                </DropdownMenuGroup>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                </HoverCardTrigger>
-                <HoverCardContent className="w-80">
-                  <div className="flex flex-col gap-3">
-                    <span className="text-sm">{oneBook.title}</span>
-
-                    <pre className="text-xs bg-accent p-1 rounded overflow-auto">
-                      {JSON.stringify(oneBook, " ", "  ")}
-                    </pre>
-                  </div>
-                </HoverCardContent>
-              </HoverCard>
+              <div
+                key={oneBook.id}
+                onClick={() => handleBookClick(oneBook)}
+                className="flex h-full flex-col rounded-lg border border-slate-200 bg-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden cursor-pointer"
+              >
+                <div className="relative aspect-[2/3] overflow-hidden">
+                  <img
+                    className="h-full w-full object-fit transition-transform duration-300"
+                    src={oneBook.cover_file_url}
+                    alt={`Cover of ${oneBook.title}`}
+                    loading="lazy"
+                  />
+                </div>
+              </div>
             ))}
           </div>
 
@@ -492,6 +462,58 @@ export default function Books() {
           </Card>
         </div>
       </div>
+
+      {/* Book Details Dialog */}
+      <Dialog open={isBookDialogOpen} onOpenChange={setIsBookDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>{selectedBook?.title}</DialogTitle>
+          </DialogHeader>
+
+          {selectedBook && (
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-row gap-2">
+                <div className="flex-none w-36">
+                  <img
+                    className="w-full rounded-lg border"
+                    src={selectedBook.cover_file_url}
+                    alt={`Cover of ${selectedBook.title}`}
+                  />
+                </div>
+
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold mb-3">Book Details</h3>
+                  <pre className="text-xs bg-accent p-3 rounded max-h-64 overflow-auto break-all whitespace-pre-wrap">
+                    {JSON.stringify(selectedBook, null, 2)}
+                  </pre>
+                </div>
+              </div>
+
+              <DialogFooter className="flex gap-2">
+                <Link href={`/${selectedBook.type === "book" ? "books" : "workbooks"}/${selectedBook.slug}/read?page=1`}>
+                  <Button variant="outline">
+                    <Eye className="mr-2 h-4 w-4" />
+                    Read
+                  </Button>
+                </Link>
+                <Link href={`/admin/books/${selectedBook.id}/edit`}>
+                  <Button variant="outline">
+                    <Pencil className="mr-2 h-4 w-4" />
+                    Edit
+                  </Button>
+                </Link>
+                <Button
+                  variant="destructive"
+                  onClick={() => DeleteBook(selectedBook.id)}
+                >
+                  <Trash className="mr-2 h-4 w-4" />
+                  Delete
+                </Button>
+              </DialogFooter>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }

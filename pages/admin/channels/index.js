@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { Switch } from '@/components/ui/switch'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { PlusIcon, RefreshCcw } from 'lucide-react'
+import { PlusIcon, RefreshCcw, Trash } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -23,10 +23,11 @@ import { toast } from 'react-toastify'
 
 export default function Channels() {
   const [channelList, setChannelList] = useState([])
+  const [channelParams, setChannelParams] = useState({})
   const [blacklistChannelMap, setBlacklistChannelMap] = useState({})
 
   useEffect(() => {
-    GetChannelList({})
+    GetChannelList(channelParams)
   }, [])
 
   async function GetChannelList(params) {
@@ -46,7 +47,6 @@ export default function Channels() {
 
   async function SyncChannel(oneChannel, breakOnExists) {
     try {
-      console.log(oneChannel)
       var scrapParams = {
         "channel_id": oneChannel.external_id,
         "page_token": "",
@@ -71,6 +71,31 @@ export default function Channels() {
     }
   }
 
+  async function DeleteChannel(oneChannel) {
+    try {
+      if (!confirm("are you sure want to delete this channel?")) {
+        return
+      }
+
+      const response = await cabocilAPI.DeleteYoutubeChannel("", {}, {
+        id: oneChannel.id,
+      })
+
+      const body = await response.json()
+
+      if (response.status !== 200) {
+        toast.error(`Error deleting youtube channel: ${body.data}`)
+        return
+      }
+
+      toast.success(`Success delete ${oneChannel.name}`)
+      GetChannelList(channelParams)
+
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   return (
     <div className="flex flex-col sm:flex-row gap-3">
       <div className="flex-none w-[240px]">
@@ -81,7 +106,7 @@ export default function Channels() {
         <div className="grid grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3">
           {channelList.map((oneChannel) => (
             <Card key={oneChannel.id} className="p-4">
-              <Link href={`/channels/${oneChannel.id}`} className='group'>
+              <Link href={`/admin/channels/${oneChannel.id}/edit`} className='group'>
                 <div className='flex items-center gap-3'>
                   <Avatar className="h-14 w-14 group-hover:scale-105">
                     <AvatarImage src={oneChannel.image_url}/>
@@ -104,6 +129,10 @@ export default function Channels() {
                     <DropdownMenuItem onClick={() => SyncChannel(oneChannel, true)}>
                       Sync With Break
                       <DropdownMenuShortcut><RefreshCcw size={16} /></DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => DeleteChannel(oneChannel)}>
+                      Delete
+                      <DropdownMenuShortcut><Trash size={16} /></DropdownMenuShortcut>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

@@ -417,7 +417,7 @@ export default function Workbooks() {
               />
             </div>
 
-            <div>
+            <div className="flex flex-col gap-3 p-1 rounded">
               {tagOptions.map((tagGroup) => (
                 <div key={tagGroup.name}>
                   <Label>{tagGroup.name}</Label>
