@@ -1,30 +1,18 @@
-
-
 import cabocilAPI from '@/apis/cabocil_api'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import Utils from '@/models/Utils'
+import { Card } from '@/components/ui/card'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { Switch } from '@/components/ui/switch'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { PlusIcon, RefreshCcw, Trash } from 'lucide-react'
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { Checkbox } from '@/components/ui/checkbox'
 import { toast } from 'react-toastify'
 
 export default function Channels() {
   const [channelList, setChannelList] = useState([])
   const [channelParams, setChannelParams] = useState({})
   const [blacklistChannelMap, setBlacklistChannelMap] = useState({})
+  const [selectedChannels, setSelectedChannels] = useState(new Set())
 
   useEffect(() => {
     GetChannelList(channelParams)
@@ -64,7 +52,7 @@ export default function Channels() {
         return
       }
 
-      toast.success(`Success sycn ${oneChannel.name}`)
+      toast.success(`Success sync ${oneChannel.name}`)
 
     } catch (e) {
       console.error(e)
@@ -96,6 +84,69 @@ export default function Channels() {
     }
   }
 
+  function toggleChannelSelection(channelId) {
+    setSelectedChannels(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(channelId)) {
+        newSet.delete(channelId)
+      } else {
+        newSet.add(channelId)
+      }
+      return newSet
+    })
+  }
+
+  function toggleSelectAll() {
+    if (selectedChannels.size === channelList.length) {
+      setSelectedChannels(new Set())
+    } else {
+      setSelectedChannels(new Set(channelList.map(ch => ch.id)))
+    }
+  }
+
+  async function bulkSyncAll() {
+    const selected = channelList.filter(ch => selectedChannels.has(ch.id))
+    if (selected.length === 0) {
+      toast.error('No channels selected')
+      return
+    }
+
+    toast.info(`Syncing ${selected.length} channels...`)
+    for (const channel of selected) {
+      await SyncChannel(channel, false)
+    }
+  }
+
+  async function bulkSyncWithBreak() {
+    const selected = channelList.filter(ch => selectedChannels.has(ch.id))
+    if (selected.length === 0) {
+      toast.error('No channels selected')
+      return
+    }
+
+    toast.info(`Syncing ${selected.length} channels with break...`)
+    for (const channel of selected) {
+      await SyncChannel(channel, true)
+    }
+  }
+
+  async function bulkDelete() {
+    const selected = channelList.filter(ch => selectedChannels.has(ch.id))
+    if (selected.length === 0) {
+      toast.error('No channels selected')
+      return
+    }
+
+    if (!confirm(`Are you sure you want to delete ${selected.length} channels?`)) {
+      return
+    }
+
+    for (const channel of selected) {
+      await DeleteChannel(channel)
+    }
+    setSelectedChannels(new Set())
+  }
+
   return (
     <div className="flex flex-col sm:flex-row gap-3">
       <div className="flex-none w-[240px]">
@@ -103,39 +154,41 @@ export default function Channels() {
       </div>
 
       <div className="flex-1">
+        {channelList.length > 0 && (
+          <div className="flex items-center gap-2 mb-3 p-3 bg-muted rounded-lg">
+            <Checkbox
+              checked={selectedChannels.size === channelList.length}
+              onCheckedChange={toggleSelectAll}
+            />
+            <span className="text-sm">
+              {selectedChannels.size > 0
+                ? `${selectedChannels.size} selected`
+                : 'Select all'}
+            </span>
+          </div>
+        )}
+
         <div className="grid grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3">
           {channelList.map((oneChannel) => (
             <Card key={oneChannel.id} className="p-4">
-              <Link href={`/admin/channels/${oneChannel.id}/edit`} className='group'>
-                <div className='flex items-center gap-3'>
-                  <Avatar className="h-14 w-14 group-hover:scale-105">
-                    <AvatarImage src={oneChannel.image_url}/>
-                    <AvatarFallback><img src="/images/cookie_kid_logo_circle.png" /></AvatarFallback>
-                  </Avatar>
-                  <span className='group-hover:text-amber-600'>{oneChannel.name}</span>
-                  <small className="">{oneChannel.string_tags}</small>
-                </div>
-              </Link>
-              <div className="flex justify-end mt-3">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline">action</Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56">
-                    <DropdownMenuItem onClick={() => SyncChannel(oneChannel, false)}>
-                      Sync All
-                      <DropdownMenuShortcut><RefreshCcw size={16} /></DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => SyncChannel(oneChannel, true)}>
-                      Sync With Break
-                      <DropdownMenuShortcut><RefreshCcw size={16} /></DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => DeleteChannel(oneChannel)}>
-                      Delete
-                      <DropdownMenuShortcut><Trash size={16} /></DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  checked={selectedChannels.has(oneChannel.id)}
+                  onCheckedChange={() => toggleChannelSelection(oneChannel.id)}
+                  className="mt-4"
+                />
+                <Link href={`/admin/channels/${oneChannel.id}/edit`} className='group flex-1'>
+                  <div className='flex items-center gap-3'>
+                    <Avatar className="h-14 w-14 group-hover:scale-105">
+                      <AvatarImage src={oneChannel.image_url}/>
+                      <AvatarFallback><img src="/images/cookie_kid_logo_circle.png" /></AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <div className='group-hover:text-amber-600 text-sm line-clamp-2'>{oneChannel.name}</div>
+                      <small className="text-muted-foreground">{oneChannel.string_tags}</small>
+                    </div>
+                  </div>
+                </Link>
               </div>
             </Card>
           ))}
@@ -147,6 +200,43 @@ export default function Channels() {
           <Link href="/admin/channels/add">
             <Button size="sm" variant="default" className="w-full"><PlusIcon />Add Channel</Button>
           </Link>
+
+          {selectedChannels.size > 0 && (
+            <>
+              <div className="border-t pt-3">
+                <p className="text-sm font-medium mb-2">Bulk Actions</p>
+                <div className="flex flex-col gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={bulkSyncAll}
+                    className="w-full justify-start"
+                  >
+                    <RefreshCcw size={16} className="mr-2" />
+                    Sync All
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={bulkSyncWithBreak}
+                    className="w-full justify-start"
+                  >
+                    <RefreshCcw size={16} className="mr-2" />
+                    Sync With Break
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={bulkDelete}
+                    className="w-full justify-start"
+                  >
+                    <Trash size={16} className="mr-2" />
+                    Delete
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
         </Card>
       </div>
     </div>

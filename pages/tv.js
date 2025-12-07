@@ -185,7 +185,7 @@ export default function Home() {
       {/* Channel List */}
       <div className='w-full'>
         <div className="flex items-center justify-between mb-4 px-2">
-          <h3 className="text-xl font-bold dark:text-white text-slate-800">Channel Favorit</h3>
+          <h3 className="text-xl font-bold dark:text-white text-slate-800">Channel Pilihan</h3>
         </div>
         <div className="flex gap-4 pb-4 overflow-x-auto scrollbar-hide snap-x w-full">
           {channelList.map((oneChannel) => (
