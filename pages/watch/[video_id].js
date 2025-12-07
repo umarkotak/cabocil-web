@@ -22,6 +22,8 @@ import {
 import VideoQuiz from '@/components/VideoQuiz'
 import cabocilAPI from '@/apis/cabocil_api'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 var minutes = 3.5
 var mobileModeLimit = 470
@@ -37,6 +39,7 @@ export default function Watch() {
   const [suggestionVideos, setSuggestionVideos] = useState([])
   const [blockVideoRecomm, setBlockVideoRecomm] = useState(false)
   const [quizTs, setQuizTs] = useState(0)
+  const [openRecomendations, setOpenRecomendations] = useState(true)
 
   const videoPlayerDivRef = useRef()
 
@@ -261,7 +264,13 @@ export default function Watch() {
         </div>
       </div>
 
-      <div id="suggestion-content" className={`flex-none w-full md:w-[402px] flex flex-col gap-5 sm:h-[calc(100vh-60px)] sm:overflow-auto`}>
+      <div id="suggestion-content" className={`flex-none w-full ${openRecomendations ? "md:w-[402px]" : "md:w-[90px]"} flex flex-col gap-5 sm:h-[calc(100vh-60px)] sm:overflow-auto relative`}>
+        <div className='flex sticky top-0 bg-background z-10'>
+          <Button size="sm7" onClick={()=>{setOpenRecomendations(!openRecomendations)}}>
+            {openRecomendations ? <ChevronRight size={10} /> : <ChevronLeft size={10} />}
+          </Button>
+        </div>
+
         {suggestionVideos.map((oneVideo)=>(
           <div className='group flex flex-row gap-2 hover:text-amber-600' key={oneVideo.id}>
             <div className='flex-none w-[169px] h-[94px] overflow-hidden'>
