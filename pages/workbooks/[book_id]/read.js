@@ -24,7 +24,7 @@ const useBookDetail = (bookId) => {
   const [loading, setLoading] = useState(false)
 
   const fetchBookDetail = useCallback(async (id) => {
-    if (!id || loading) return
+    if (!id || loading || error) return
 
     setLoading(true)
     setError(null)
@@ -453,7 +453,7 @@ export default function Read() {
                 )}
 
                 {/* Preview */}
-                <div className="aspect-[3/4] overflow-hidden rounded-lg bg-gray-100">
+                <div className="aspect-3/4 overflow-hidden rounded-lg bg-gray-100">
                   <img
                     src={page.image_file_url}
                     alt={`Page ${page.page_number}`}
@@ -463,26 +463,26 @@ export default function Read() {
                 </div>
 
                 {/* Page number */}
-                <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
+                <div className="absolute bottom-1 right-1 bg-black/70 text-white text-xs px-2 py-1 rounded">
                   {bookDetail?.can_action && `id: ${page.id}, `}
                   {page.page_number}
                 </div>
 
                 {/* Active indicator */}
-                {activePageNumber === index + 1 && (
-                  <div className="absolute top-1 right-1 bg-blue-500 text-white text-xs px-2 py-1 rounded">
+                {/* {activePageNumber === index + 1 && (
+                  <div className="absolute top-1 right-1 bg-primary text-white text-xs px-2 py-1 rounded">
                     <EyeIcon size={14} />
                   </div>
-                )}
+                )} */}
 
                 {/* Selection overlay */}
-                {bookDetail?.can_action && selectedPageIds.includes(page.id) && (
+                {/* {bookDetail?.can_action && selectedPageIds.includes(page.id) && (
                   <div className="absolute inset-0 bg-red-500 bg-opacity-20 rounded-lg border-2 border-red-500" />
-                )}
+                )} */}
 
                 {/* Hover overlay */}
                 <div
-                  className="absolute inset-0 bg-blue-500 bg-opacity-0 group-hover:bg-opacity-30 rounded-lg cursor-pointer"
+                  className="absolute inset-0 bg-blue-500/0 group-hover:bg-blue-500/30 rounded-lg cursor-pointer"
                   onClick={() => goToPage(index + 1)}
                   role="button"
                   tabIndex={0}

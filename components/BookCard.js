@@ -16,7 +16,7 @@ export default function BookCard({oneBook}) {
             className="group block"
           >
             <div className="flex h-full flex-col rounded-lg border border-slate-200 bg-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden group-hover:shadow-md group-hover:shadow-accent">
-              <div className="relative aspect-[2/3] overflow-hidden">
+              <div className="relative aspect-2/3 overflow-hidden">
                 <img
                   className="h-full w-full object-fit transition-transform duration-300"
                   src={oneBook.cover_file_url}

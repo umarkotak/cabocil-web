@@ -405,58 +405,54 @@ export default function Read() {
                 }`}
                 // onClick={() => GoToPage(index + 1)}
               >
-                {/* Checkbox for delete mode */}
-                {bookDetail.can_action && (
-                  <div
-                    className="absolute top-2 left-2 z-10"
-                    // onClick={(e) => {
-                    //   e.stopPropagation()
-                    //   togglePageSelection(page.id)
-                    // }}
-                  >
+                {/* Checkbox */}
+                {bookDetail?.can_action && (
+                  <div className="absolute top-2 left-2 z-10">
                     <input
                       type="checkbox"
                       checked={selectedPageIds.includes(page.id)}
                       onChange={() => togglePageSelection(page.id)}
                       className="w-4 h-4 text-red-600 bg-white border-2 border-gray-300 rounded focus:ring-red-500 focus:ring-2"
+                      aria-label={`Select page ${page.page_number}`}
                     />
                   </div>
                 )}
 
-                {/* Page preview */}
-                <div
-                  className="aspect-[3/4] overflow-hidden rounded-lg bg-gray-100"
-                >
+                {/* Preview */}
+                <div className="aspect-3/4 overflow-hidden rounded-lg bg-gray-100">
                   <img
                     src={page.image_file_url}
-                    alt={`Page ${index + 1}`}
+                    alt={`Page ${page.page_number}`}
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />
                 </div>
 
                 {/* Page number */}
-                <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
-                  {bookDetail.can_action && `id: ${page.id}, `}
+                <div className="absolute bottom-1 right-1 bg-black/70 text-white text-xs px-2 py-1 rounded">
+                  {bookDetail?.can_action && `id: ${page.id}, `}
                   {page.page_number}
                 </div>
 
-                {/* Active page indicator */}
-                {activePageNumber === index + 1 && (
-                  <div className="absolute top-1 right-1 bg-blue-500 text-white text-xs px-2 py-1 rounded">
+                {/* Active indicator */}
+                {/* {activePageNumber === index + 1 && (
+                  <div className="absolute top-1 right-1 bg-primary text-white text-xs px-2 py-1 rounded">
                     <EyeIcon size={14} />
                   </div>
-                )}
+                )} */}
 
-                {/* Selection indicator */}
-                {bookDetail.can_action && selectedPageIds.includes(page.id) && (
+                {/* Selection overlay */}
+                {/* {bookDetail?.can_action && selectedPageIds.includes(page.id) && (
                   <div className="absolute inset-0 bg-red-500 bg-opacity-20 rounded-lg border-2 border-red-500" />
-                )}
+                )} */}
 
                 {/* Hover overlay */}
                 <div
-                  className="absolute inset-0 bg-blue-500 bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-200 rounded-lg"
-                  onClick={() => GoToPage(index + 1)}
+                  className="absolute inset-0 bg-blue-500/0 group-hover:bg-blue-500/30 rounded-lg cursor-pointer"
+                  onClick={() => goToPage(index + 1)}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Go to page ${page.page_number}`}
                 />
               </div>
             ))}

@@ -461,7 +461,7 @@ export default function Books() {
             <div>
               <Label className="text-sm font-medium mb-2 block">Akses</Label>
               <Select value={tempAccess} onValueChange={setTempAccess}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Pilih akses..." />
                 </SelectTrigger>
                 <SelectContent>
@@ -477,7 +477,7 @@ export default function Books() {
             <div>
               <Label className="text-sm font-medium mb-2 block">Urutkan</Label>
               <Select value={tempSort} onValueChange={setTempSort}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Urutkan..." />
                 </SelectTrigger>
                 <SelectContent>

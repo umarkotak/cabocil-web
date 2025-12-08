@@ -1,21 +1,19 @@
 import cabocilAPI from "@/apis/cabocil_api";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ChevronDown, Eye, Filter, MoreHorizontal, Pencil, PlusIcon, Search, Trash, X } from "lucide-react";
+import { ChevronDown, Eye, Filter, Pencil, PlusIcon, Search, Trash } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { use, useEffect, useState } from "react";
-import { LoadingSpinner } from "@/components/ui/spinner";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuShortcut, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useEffect, useState } from "react";
+import { Card } from "@/components/ui/card";
 import { toast } from "react-toastify";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { RefreshCw } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 
 export default function Books() {
   const [bookList, setBookList] = useState([]);
@@ -168,20 +166,20 @@ export default function Books() {
     }
   }
 
-  async function GetUploadBookStatus() {
+  async function GetUploadBookStatus(silent = false) {
     try {
       const response = await cabocilAPI.GetUploadBookStatus("", {}, {});
-
       const body = await response.json();
 
       if (response.status !== 200) {
-        toast.error("error fetching upload book status")
+        toast.error("Error fetching upload book status");
         return;
       }
 
-      setUploadBookStatus(body.data);
+      setUploadBookStatus(body.data.status_map);
     } catch (e) {
-      toast.error(e)
+      toast.error(e.message || "Failed to fetch status");
+    } finally {
     }
   }
 
@@ -382,7 +380,7 @@ export default function Books() {
             <div>
               <Label className="text-sm font-medium mb-2 block">Akses</Label>
               <Select value={tempAccess} onValueChange={setTempAccess}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Pilih akses..." />
                 </SelectTrigger>
                 <SelectContent>
@@ -398,7 +396,7 @@ export default function Books() {
             <div>
               <Label className="text-sm font-medium mb-2 block">Urutkan</Label>
               <Select value={tempSort} onValueChange={setTempSort}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Urutkan..." />
                 </SelectTrigger>
                 <SelectContent>
@@ -422,13 +420,20 @@ export default function Books() {
                 onClick={() => handleBookClick(oneBook)}
                 className="flex h-full flex-col rounded-lg border border-slate-200 bg-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden cursor-pointer"
               >
-                <div className="relative aspect-[2/3] overflow-hidden">
+                <div className="relative aspect-2/3 overflow-hidden">
                   <img
                     className="h-full w-full object-fit transition-transform duration-300"
                     src={oneBook.cover_file_url}
                     alt={`Cover of ${oneBook.title}`}
                     loading="lazy"
                   />
+                  {oneBook.is_free && <div className="absolute top-0 right-0 w-24 h-24 overflow-hidden">
+                    <div
+                      className="absolute top-3 right-[-73px] rotate-45 bg-accent text-center text-[8px] font-semibold w-48 py-0.5 shadow-md"
+                    >
+                      FREE
+                    </div>
+                  </div>}
                 </div>
               </div>
             ))}
@@ -451,13 +456,55 @@ export default function Books() {
 
         <div className="flex-none w-[240px] flex">
           <Card className="sticky top-14 p-3 w-full flex flex-col gap-3">
-            <Link href="/admin/books/add"><Button size="sm" className="w-full"><PlusIcon />Add Book</Button></Link>
+            <Link href="/admin/books/add">
+              <Button size="sm" className="w-full">
+                <PlusIcon />
+                Add Book
+              </Button>
+            </Link>
 
-            <div>
-              <span className="text-sm">Upload Status:</span>
-              <pre className="text-xs bg-accent p-1 rounded">
-                {JSON.stringify(uploadBookStatus, " ", "  ")}
-              </pre>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Upload Status</span>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={()=>{GetUploadBookStatus(false)}}
+                  className="h-7 w-7 p-0"
+                >
+                  <RefreshCw className={`h-4 w-4`} />
+                </Button>
+              </div>
+
+              {uploadBookStatus.length > 0 ? (
+                <p className="text-xs text-muted-foreground">No active uploads</p>
+              ) : (
+                <div className="flex flex-col gap-3">
+                  {Object.entries(uploadBookStatus).map(([key, status]) => {
+                    const progress = (status.current_page / status.max_page) * 100;
+                    const isComplete = status.current_page === status.max_page;
+
+                    return (
+                      <div key={key} className="flex flex-col gap-1 p-2 bg-accent rounded-md">
+                        <span className="text-xs font-medium truncate" title={key}>
+                          {key}
+                        </span>
+                        <Progress value={progress} className="h-2" />
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-muted-foreground">
+                            {status.current_page} / {status.max_page} pages
+                          </span>
+                          {isComplete && (
+                            <span className="text-xs text-green-600 font-medium">
+                              Complete
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </Card>
         </div>

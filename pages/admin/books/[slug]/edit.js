@@ -429,12 +429,9 @@ export default function EditBookPage() {
                       <Label>Tags</Label>
                       <div className="flex flex-wrap gap-2 mt-2 mb-3">
                         {formData.tags.map((tag, index) => (
-                          <Badge key={index} variant="secondary" className="flex items-center gap-1">
+                          <Badge key={index} variant="outline" className="flex items-center gap-1 cursor-pointer" onClick={() => removeTag(tag)}>
                             {tag}
-                            <X
-                              className="w-3 h-3 cursor-pointer"
-                              onClick={() => removeTag(tag)}
-                            />
+                            <X className="w-3 h-3" />
                           </Badge>
                         ))}
                       </div>
@@ -455,12 +452,9 @@ export default function EditBookPage() {
                       <Label>Access Tags</Label>
                       <div className="flex flex-wrap gap-2 mt-2 mb-3">
                         {formData.access_tags.map((tag, index) => (
-                          <Badge key={index} variant="outline" className="flex items-center gap-1">
+                          <Badge key={index} variant="outline" className="flex items-center gap-1 cursor-pointer" onClick={() => removeAccessTag(tag)}>
                             {tag}
-                            <X
-                              className="w-3 h-3 cursor-pointer"
-                              onClick={() => removeAccessTag(tag)}
-                            />
+                            <X className="w-3 h-3" />
                           </Badge>
                         ))}
                       </div>
