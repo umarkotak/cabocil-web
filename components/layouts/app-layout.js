@@ -10,6 +10,7 @@ import cabocilAPI from '@/apis/cabocil_api';
 import UserDropdown from './user-dropdown';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { InstallButton } from "../InstallButton";
+import { toast } from "react-toastify";
 
 // refer to ui/sidebar
 const contentWidthOnSideOpen = "w-[calc(100%-16rem)]"
