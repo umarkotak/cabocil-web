@@ -1,17 +1,12 @@
-import { LayoutDashboard, LogOut, Moon, Sun } from "lucide-react"
-import Link from "next/link"
+import { LogOut } from "lucide-react"
 import cabocilAPI from '@/apis/cabocil_api';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import { InstallButton } from "../InstallButton";
-import { useTheme } from "next-themes";
 
 export default function UserDropdown({ userData }) {
   const router = useRouter()
-  const { setTheme } = useTheme()
-
   function Logout() {
     cabocilAPI.removeCookie("CK:AT")
     toast.success("Logout Successfull")
@@ -49,9 +44,6 @@ export default function UserDropdown({ userData }) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {/* <InstallButton />
-        <DropdownMenuItem onClick={()=>setTheme("light")}><Sun />Light Mode</DropdownMenuItem>
-        <DropdownMenuItem onClick={()=>setTheme("dark")}><Moon />Dark Mode</DropdownMenuItem> */}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => Logout()}><LogOut />Log out</DropdownMenuItem>
       </DropdownMenuContent>

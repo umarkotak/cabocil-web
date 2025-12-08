@@ -148,6 +148,7 @@ export default function Channel() {
             creatorImageUrl={oneVideo.channel.image_url}
             shortedVideoTitle={oneVideo.title}
             creatorName={oneVideo.channel.name}
+            canAction={oneVideo.can_action}
           />
         ))}
       </div>

@@ -47,6 +47,13 @@ export default function VideoCard({
     }
   }
 
+  async function quickDelete() {
+    setDeleted(true)
+    if (canAction) {
+      cabocilAPI.DeleteVideo("", {}, { youtube_video_id: ytkiddId })
+    }
+  }
+
   return (
     <div className={`group rounded-lg hover:text-amber-600 ${deleted ? "hidden" : ""}`}>
       <div className="overflow-hidden rounded-lg relative">
@@ -58,7 +65,7 @@ export default function VideoCard({
             onLoad={(e) => {
               if (e.target.width / e.target.height < 1.4) {
                 e.target.src = "/images/no_video.png"
-                setDeleted(true)
+                quickDelete()
               }
             }}
           />
