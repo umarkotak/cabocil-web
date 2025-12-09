@@ -11,14 +11,17 @@ export default function BookCard({oneBook}) {
       <HoverCard>
         <HoverCardTrigger asChild>
           <a
-            href={`/${oneBook.type === "book" ? "books" : "workbooks"}/${oneBook.slug}/read?page=1`}
+            href={`/${oneBook.type === "default" ? "books" : "workbooks"}/${oneBook.slug}/read?page=1`}
             key={oneBook.id}
             className="group block"
           >
             <div className="flex h-full flex-col rounded-lg border border-slate-200 bg-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden group-hover:shadow-md group-hover:shadow-accent">
-              <div className="relative aspect-2/3 overflow-hidden">
+              <div
+                style={{'--image-url': `url(${oneBook.cover_file_url})`}}
+                className={`relative aspect-2/3 overflow-hidden bg-contain  bg-repeat bg-(image:--image-url) bg-center`}
+              >
                 <img
-                  className="h-full w-full object-fit transition-transform duration-300"
+                  className={`h-full w-full object-contain transition-transform duration-300 backdrop-blur-lg`}
                   src={oneBook.cover_file_url}
                   alt={`Cover of ${oneBook.title}`}
                   loading="lazy"

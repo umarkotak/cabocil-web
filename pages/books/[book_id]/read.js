@@ -310,13 +310,13 @@ export default function Read() {
 
         {/* Navigation arrows */}
         <button
-          className="absolute z-0 top-0 left-0 w-1/2 h-full bg-transparent hover:cursor-w-resize hover:bg-zinc-500 hover:bg-opacity-5 rounded-l-lg flex justify-start items-center"
+          className="absolute z-0 top-0 left-0 w-1/2 h-full bg-transparent hover:cursor-w-resize hover:bg-zinc-500/10 rounded-l-lg flex justify-start items-center"
           onClick={PrevPage}
         >
           <span className="bg-white opacity-50 text-black"><ArrowLeft /></span>
         </button>
         <button
-          className="absolute z-0 top-0 right-0 w-1/2 h-full bg-transparent hover:cursor-e-resize hover:bg-zinc-500 hover:bg-opacity-5 rounded-r-lg flex justify-end items-center"
+          className="absolute z-0 top-0 right-0 w-1/2 h-full bg-transparent hover:cursor-e-resize hover:bg-zinc-500/5 rounded-r-lg flex justify-end items-center"
           onClick={NextPage}
         >
           <span className="bg-white opacity-50 text-black"><ArrowRight /></span>

@@ -46,6 +46,18 @@ class UtilsClass {
       .replace(/[^a-z0-9-]+/g, '') // Remove non-alphanumeric characters (except dashes)
       .replace(/^-+|-+$/g, ''); // Remove leading/trailing dashes
   }
+
+  RemoveFileExtension(filename) {
+    const lastDotIndex = filename.lastIndexOf('.');
+
+    // If no dot is found or the dot is the first character (e.g., ".bashrc"),
+    // assume no extension or a hidden file without a true extension to remove.
+    if (lastDotIndex === -1 || lastDotIndex === 0) {
+      return filename;
+    }
+
+    return filename.substring(0, lastDotIndex);
+  }
 }
 
 var Utils = new UtilsClass()

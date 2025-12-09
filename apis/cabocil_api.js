@@ -12,7 +12,7 @@ class CabocilAPI {
       // this.SnapClientKey = "SB-Mid-client-XwRH_ygkgDPjcIO8"
     } else {
       this.Host = "https://cabocil-api.cabocil.com"
-      this.Host = "http://localhost:33000"
+      // this.Host = "http://localhost:33000"
 
       // production
       // this.SnapJSUrl = "https://app.midtrans.com/snap/snap.js"

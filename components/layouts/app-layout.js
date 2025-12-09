@@ -11,13 +11,15 @@ import UserDropdown from './user-dropdown';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { InstallButton } from "../InstallButton";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 // refer to ui/sidebar
 const contentWidthOnSideOpen = "w-[calc(100%-16rem)]"
 const contentWidthOnSideClose = "w-[calc(100%-3rem)]"
 
 export default function AppLayout({ children }) {
-  const { setTheme } = useTheme();
+  const { setTheme } = useTheme()
+  const router = useRouter()
 
   const [isAdmin, setIsAdmin] = useState(false)
   const [userData, setUserData] = useState({})

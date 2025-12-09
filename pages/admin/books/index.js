@@ -113,14 +113,18 @@ export default function Books() {
     GetUploadBookStatus()
   }, [])
 
-  // Fetch books when filters change
-  useEffect(() => {
-    const params = {
+  function GetParams() {
+    return {
       types: selectedTypes.join(","),
       tags: selectedTags.join(","),
       title: title,
       sort: sort
     };
+  }
+
+  // Fetch books when filters change
+  useEffect(() => {
+    const params = GetParams()
 
     // Add access-related params based on access value
     if (access === "free") {
@@ -177,6 +181,9 @@ export default function Books() {
       }
 
       setUploadBookStatus(body.data.status_map);
+
+      const params = GetParams()
+      GetBookList(params)
     } catch (e) {
       toast.error(e.message || "Failed to fetch status");
     } finally {
@@ -420,9 +427,12 @@ export default function Books() {
                 onClick={() => handleBookClick(oneBook)}
                 className="flex h-full flex-col rounded-lg border border-slate-200 bg-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden cursor-pointer"
               >
-                <div className="relative aspect-2/3 overflow-hidden">
+                <div
+                  style={{'--image-url': `url(${oneBook.cover_file_url})`}}
+                  className={`relative aspect-2/3 overflow-hidden bg-contain  bg-repeat bg-(image:--image-url) bg-center`}
+                >
                   <img
-                    className="h-full w-full object-fit transition-transform duration-300"
+                    className={`h-full w-full object-contain transition-transform duration-300 backdrop-blur-lg`}
                     src={oneBook.cover_file_url}
                     alt={`Cover of ${oneBook.title}`}
                     loading="lazy"
@@ -529,15 +539,42 @@ export default function Books() {
                 </div>
 
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold mb-3">Book Details</h3>
-                  <pre className="text-xs bg-accent p-3 rounded max-h-64 overflow-auto break-all whitespace-pre-wrap">
-                    {JSON.stringify(selectedBook, null, 2)}
-                  </pre>
+                  <div className="space-y-1.5 text-sm">
+                    <div>
+                      <label className="font-medium text-muted-foreground">ID / Slug</label>
+                      <p className="bg-accent p-2 rounded text-xs break-all">{selectedBook.id} / {selectedBook.slug}</p>
+                    </div>
+
+                    <div>
+                      <label className="font-medium text-muted-foreground">Title</label>
+                      <p className="bg-accent p-2 rounded text-xs break-all">{selectedBook.title}</p>
+                    </div>
+
+                    <div>
+                      <label className="font-medium text-muted-foreground">Type</label>
+                      <p className="bg-accent p-2 rounded text-xs break-all">{selectedBook.type}</p>
+                    </div>
+
+                    <div>
+                      <label className="font-medium text-muted-foreground">Tags</label>
+                      <p className="bg-accent p-2 rounded text-xs break-all">
+                        {selectedBook.tags.join(", ")}
+                      </p>
+                    </div>
+
+                    <div>
+                      <label className="font-medium text-muted-foreground">Free?</label>
+                      <p className="bg-accent p-2 rounded text-xs break-all">
+                        {selectedBook.is_free ? "Yes" : "No"}
+                      </p>
+                    </div>
+                  </div>
                 </div>
+
               </div>
 
               <DialogFooter className="flex gap-2">
-                <Link href={`/${selectedBook.type === "book" ? "books" : "workbooks"}/${selectedBook.slug}/read?page=1`}>
+                <Link href={`/${selectedBook.type === "default" ? "books" : "workbooks"}/${selectedBook.slug}/read?page=1`}>
                   <Button variant="outline">
                     <Eye className="mr-2 h-4 w-4" />
                     Read
