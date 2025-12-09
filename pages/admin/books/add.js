@@ -43,7 +43,7 @@ export default function DevBooks() {
   const handleFileChange = (event) => {
     let file = event.target.files[0]
 
-    let nameClean = RemoveFileExtension(file.name).replaceAll("-", " ")
+    let nameClean = Utils.RemoveFileExtension(file.name).replaceAll("-", " ").replace(/\s+/g, ' ')
     let slug = Utils.Slugify(nameClean)
 
     setBookPdfFile(file)
