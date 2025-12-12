@@ -1,6 +1,6 @@
 class CabocilAPI {
   constructor() {
-    if (typeof(window) !== "undefined" && window.location.protocol === "https:") {
+    if (typeof (window) !== "undefined" && window.location.protocol === "https:") {
       this.Host = "https://cabocil-api.cabocil.com"
 
       // production
@@ -12,7 +12,7 @@ class CabocilAPI {
       // this.SnapClientKey = "SB-Mid-client-XwRH_ygkgDPjcIO8"
     } else {
       this.Host = "https://cabocil-api.cabocil.com"
-      // this.Host = "http://localhost:33000"
+      this.Host = "http://localhost:33000"
 
       // production
       // this.SnapJSUrl = "https://app.midtrans.com/snap/snap.js"
@@ -47,7 +47,7 @@ class CabocilAPI {
   async GetVideos(authToken, h, params) {
     if (localStorage.getItem(`COOKIEKID:BLACKLIST_CHANNEL_MAP`)) {
       var blacklistMap = JSON.parse(localStorage.getItem(`COOKIEKID:BLACKLIST_CHANNEL_MAP`))
-      params.exclude_channel_ids = Object.keys(blacklistMap).filter((k)=>blacklistMap[k]).map((k)=>`${k}`).join(",")
+      params.exclude_channel_ids = Object.keys(blacklistMap).filter((k) => blacklistMap[k]).map((k) => `${k}`).join(",")
     }
 
     return this.Get(`/ytkidd/api/youtube_videos`, authToken, h, params)
@@ -263,7 +263,7 @@ class CabocilAPI {
       //   return localStorage.getItem("VDUB:SETTING:SERVER_URL")
       // }
       return this.Host
-    } catch(e) {
+    } catch (e) {
       return this.Host
     }
   }
