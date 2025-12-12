@@ -9,7 +9,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar"
 import { usePathname } from "next/navigation"
@@ -109,7 +108,6 @@ export function AppSidebar({ userData, isAdmin }) {
           </SidebarGroupContent>
         </SidebarGroup>
         {isAdmin && <>
-          <SidebarSeparator />
           <SidebarGroup>
             <SidebarGroupLabel asChild>
               <SidebarGroupLabel>Admin</SidebarGroupLabel>
