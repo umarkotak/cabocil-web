@@ -428,7 +428,7 @@ export default function Books() {
                 className="flex h-full flex-col rounded-lg border border-slate-200 bg-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden cursor-pointer"
               >
                 <div
-                  style={{'--image-url': `url(${oneBook.cover_file_url})`}}
+                  style={{ '--image-url': `url(${oneBook.cover_file_url})` }}
                   className={`relative aspect-2/3 overflow-hidden bg-contain  bg-repeat bg-(image:--image-url) bg-center`}
                 >
                   <img
@@ -479,7 +479,7 @@ export default function Books() {
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={()=>{GetUploadBookStatus(false)}}
+                  onClick={() => { GetUploadBookStatus(false) }}
                   className="h-7 w-7 p-0"
                 >
                   <RefreshCw className={`h-4 w-4`} />

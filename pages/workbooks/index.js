@@ -1,18 +1,16 @@
 import cabocilAPI from "@/apis/cabocil_api";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ChevronDown, Filter, Search, X } from "lucide-react";
+import { Filter } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { LoadingSpinner } from "@/components/ui/spinner";
-import { Card } from "@/components/ui/card";
 import BookCard from "@/components/BookCard";
+import {
+  MobileFilterDialog,
+  ActiveFiltersBadges,
+  DesktopFilterSidebar,
+  SORT_OPTIONS,
+  ACCESS_OPTIONS
+} from "@/components/BookFilter";
 
 export default function Workbooks() {
   const [bookList, setBookList] = useState([]);
@@ -28,7 +26,6 @@ export default function Workbooks() {
   const [sort, setSort] = useState("title_asc");
   const [access, setAccess] = useState("all");
   const [loading, setLoading] = useState(false);
-  const [accessTags, setAccessTags] = useState([])
 
   // Temporary filter states for modal (before applying)
   const [tempSelectedTypes, setTempSelectedTypes] = useState(["workbook"]);
@@ -36,22 +33,7 @@ export default function Workbooks() {
   const [tempTitle, setTempTitle] = useState("");
   const [tempSort, setTempSort] = useState("title_asc");
   const [tempAccess, setTempAccess] = useState("all");
-  const [tempAccessTags, setTempAccessTags] = useState([])
-  const [now, setNow] = useState(0)
-
-  const sortOptions = [
-    { value: "title_asc", label: "A-Z" },
-    { value: "title_desc", label: "Z-A" },
-    { value: "id_desc", label: "Newest" },
-    { value: "id_asc", label: "Oldest" },
-    { value: "random", label: "Random" },
-  ];
-
-  const accessOptions = [
-    { value: "all", label: "All" },
-    { value: "free", label: "Free" },
-    { value: "premium", label: "Premium" },
-  ];
+  const [now, setNow] = useState(0);
 
   // Initialize filters from URL params
   useEffect(() => {
@@ -79,7 +61,6 @@ export default function Workbooks() {
       setTempSort(urlSort);
     }
 
-    // Determine access value from URL params
     if (urlAccess === "free") {
       setAccess("free");
       setTempAccess("free");
@@ -107,13 +88,11 @@ export default function Workbooks() {
       sort: sort
     };
 
-    // Add access-related params based on access value
     if (access === "free") {
       params.access = "free";
     } else if (access === "premium") {
       params.exclude_access = "free";
     }
-    // If access === "all", don't add any access params
 
     GetBookList(params);
   }, [selectedTypes, selectedTags, title, sort, access, now]);
@@ -126,7 +105,6 @@ export default function Workbooks() {
   async function GetBookList(params) {
     setLoading(true);
     try {
-      // Clean up params - remove empty values
       const cleanParams = Object.entries(params).reduce((acc, [key, value]) => {
         if (value && value !== "") {
           acc[key] = value;
@@ -142,7 +120,7 @@ export default function Workbooks() {
 
       setBookList(body.data.books);
       if (body.data.tag_group) {
-        setTagOptions(body.data.tag_group)
+        setTagOptions(body.data.tag_group);
       }
     } catch (e) {
       console.error(e);
@@ -166,7 +144,7 @@ export default function Workbooks() {
     setSort(tempSort);
     setAccess(tempAccess);
     setIsFilterModalOpen(false);
-    setNow(new Date())
+    setNow(new Date());
   };
 
   const clearFilters = () => {
@@ -199,301 +177,62 @@ export default function Workbooks() {
     setTempAccess(access);
   };
 
-  const hasActiveFilters = selectedTypes.length > 0 || selectedTags.length > 0 || title || sort !== "title_asc" || access !== "all";
   const activeFiltersCount = selectedTags.length + (title ? 1 : 0) + (sort !== "title_asc" ? 1 : 0) + (access !== "all" ? 1 : 0);
 
   return (
     <main className="">
-      {/* Filter Button and Active Filters */}
-      <div className="sticky top-11 z-30 lg:hidden my-2 bg-background py-1">
-        <div className="flex items-center gap-4">
-          <Dialog open={isFilterModalOpen} onOpenChange={setIsFilterModalOpen}>
-            <DialogTrigger asChild>
-              <Button
-                variant="default"
-                onClick={() => {
-                  resetTempFilters();
-                  setIsFilterModalOpen(true);
-                }}
-                className="flex items-center gap-2"
-              >
-                <Filter className="h-4 w-4" />
-                Filter
-                {activeFiltersCount > 0 && (
-                  <Badge variant="secondary" className="ml-1 text-xs">
-                    {activeFiltersCount}
-                  </Badge>
-                )}
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px]">
-              <DialogHeader>
-                <DialogTitle>Filter Buku</DialogTitle>
-              </DialogHeader>
+      {/* Mobile Filter Dialog */}
+      <MobileFilterDialog
+        isOpen={isFilterModalOpen}
+        onOpenChange={setIsFilterModalOpen}
+        tempTitle={tempTitle}
+        setTempTitle={setTempTitle}
+        tempSelectedTags={tempSelectedTags}
+        handleTempTagChange={handleTempTagChange}
+        tempAccess={tempAccess}
+        setTempAccess={setTempAccess}
+        tempSort={tempSort}
+        setTempSort={setTempSort}
+        tagOptions={tagOptions}
+        onApply={applyFilters}
+        onClear={clearFilters}
+        onReset={resetTempFilters}
+        activeFiltersCount={activeFiltersCount}
+        loading={loading}
+      />
 
-              <div className="space-y-6 py-4">
-                {/* Title Search */}
-                <div>
-                  <Label htmlFor="modal-title" className="text-sm font-medium">
-                    Cari Judul Buku
-                  </Label>
-                  <Input
-                    id="modal-title"
-                    type="text"
-                    placeholder="Masukkan judul buku..."
-                    value={tempTitle}
-                    onChange={(e) => setTempTitle(e.target.value)}
-                    className="mt-1"
-                  />
-                </div>
-
-                {/* Tags Dropdown */}
-                <div>
-                  {tagOptions.map((tagGroup) => (
-                    <div key={tagGroup.name}>
-                      <div>{tagGroup.name}</div>
-
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button variant="outline" className="w-full justify-between">
-                            <span className="truncate">
-                              {tempSelectedTags.length === 0
-                                ? "Select tags..."
-                                : `${tempSelectedTags.length} selected`}
-                            </span>
-                            <ChevronDown className="h-4 w-4 shrink-0" />
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-full p-0" align="start">
-                          <div className="p-4 space-y-2">
-                            {tagGroup?.tags?.map((tag) => (
-                              <div key={tag} className="flex items-center space-x-2">
-                                <Checkbox
-                                  id={`modal-tag-${tag}`}
-                                  checked={tempSelectedTags.includes(tag)}
-                                  onCheckedChange={(checked) => handleTempTagChange(tag, checked)}
-                                />
-                                <Label
-                                  htmlFor={`modal-tag-${tag}`}
-                                  className="text-sm font-normal cursor-pointer"
-                                >
-                                  {tag}
-                                </Label>
-                              </div>
-                            ))}
-                          </div>
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Access Select */}
-                <div>
-                  <Label className="text-sm font-medium mb-2 block">Akses</Label>
-                  <Select value={tempAccess} onValueChange={setTempAccess}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pilih akses..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {accessOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Sort Select */}
-                <div>
-                  <Label className="text-sm font-medium mb-2 block">Urutkan</Label>
-                  <Select value={tempSort} onValueChange={setTempSort}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Urutkan..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {sortOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <DialogFooter className="flex gap-2">
-                <Button variant="outline" onClick={clearFilters}>
-                  Clear All
-                </Button>
-                <Button onClick={applyFilters}>
-                  Apply Filters
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-
-          {loading && <LoadingSpinner />}
-        </div>
-
-        {/* Active Filters Display */}
-        {hasActiveFilters && (
-          <div className="flex flex-wrap gap-2">
-            {selectedTags.map((tag) => (
-              <Badge
-                key={tag}
-                variant="secondary"
-                className="text-xs flex items-center gap-1"
-              >
-                Tag: {tagOptions.find(t => t.value === tag)?.label}
-                <X
-                  className="h-3 w-3 cursor-pointer hover:text-red-500"
-                  onClick={() => setSelectedTags(prev => prev.filter(t => t !== tag))}
-                />
-              </Badge>
-            ))}
-            {title && (
-              <Badge
-                variant="secondary"
-                className="text-xs flex items-center gap-1"
-              >
-                Title: "{title}"
-                <X
-                  className="h-3 w-3 cursor-pointer hover:text-red-500"
-                  onClick={() => setTitle("")}
-                />
-              </Badge>
-            )}
-            {access !== "all" && (
-              <Badge
-                variant="secondary"
-                className="text-xs flex items-center gap-1"
-              >
-                Access: {accessOptions.find(a => a.value === access)?.label}
-                <X
-                  className="h-3 w-3 cursor-pointer hover:text-red-500"
-                  onClick={() => setAccess("all")}
-                />
-              </Badge>
-            )}
-            {sort !== "title_asc" && (
-              <Badge
-                variant="secondary"
-                className="text-xs flex items-center gap-1"
-              >
-                Sort: {sortOptions.find(s => s.value === sort)?.label}
-                <X
-                  className="h-3 w-3 cursor-pointer hover:text-red-500"
-                  onClick={() => setSort("title_asc")}
-                />
-              </Badge>
-            )}
-          </div>
-        )}
+      {/* Active Filters Badges */}
+      <div className="lg:hidden">
+        <ActiveFiltersBadges
+          selectedTags={selectedTags}
+          title={title}
+          access={access}
+          sort={sort}
+          tagOptions={tagOptions}
+          onRemoveTag={(tag) => setSelectedTags(prev => prev.filter(t => t !== tag))}
+          onRemoveTitle={() => setTitle("")}
+          onRemoveAccess={() => setAccess("all")}
+          onRemoveSort={() => setSort("title_asc")}
+        />
       </div>
 
       <div className="flex flex-row gap-3">
-        <div className="hidden lg:block w-[240px]">
-          <Card className="sticky top-14 p-3 w-full flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-              <span>Pencarian</span>
-              <Button size="smv2" onClick={applyFilters}>
-                <Search /> Cari
-              </Button>
-            </div>
-
-            <div>
-              <Label htmlFor="modal-title" className="text-sm font-medium">
-                Cari Judul Buku
-              </Label>
-              <Input
-                id="modal-title"
-                type="text"
-                placeholder="Masukkan judul buku..."
-                value={tempTitle}
-                onChange={(e) => setTempTitle(e.target.value)}
-                className="mt-1"
-              />
-            </div>
-
-            <div className="flex flex-col gap-3 p-1 rounded">
-              {tagOptions.map((tagGroup) => (
-                <div key={tagGroup.name}>
-                  <Label>{tagGroup.name}</Label>
-
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" className="w-full justify-between">
-                        <span className="truncate">
-                          {tempSelectedTags.length === 0
-                            ? "Select tags..."
-                            : `${tempSelectedTags.length} selected`}
-                        </span>
-                        <ChevronDown className="h-4 w-4 shrink-0" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-full p-0" align="start">
-                      <div className="p-4 space-y-2">
-                        {tagGroup?.tags?.map((tag) => (
-                          <div key={tag} className="flex items-center space-x-2">
-                            <Checkbox
-                              id={`modal-tag-${tag}`}
-                              checked={tempSelectedTags.includes(tag)}
-                              onCheckedChange={(checked) => handleTempTagChange(tag, checked)}
-                            />
-                            <Label
-                              htmlFor={`modal-tag-${tag}`}
-                              className="text-sm font-normal cursor-pointer"
-                            >
-                              {tag}
-                            </Label>
-                          </div>
-                        ))}
-                      </div>
-                    </PopoverContent>
-                  </Popover>
-                </div>
-              ))}
-            </div>
-
-            <div>
-              <Label className="text-sm font-medium mb-2 block">Akses</Label>
-              <Select value={tempAccess} onValueChange={setTempAccess}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Pilih akses..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {accessOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <Label className="text-sm font-medium mb-2 block">Urutkan</Label>
-              <Select value={tempSort} onValueChange={setTempSort}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Urutkan..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {sortOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-          </Card>
-        </div>
+        {/* Desktop Sidebar Filter */}
+        <DesktopFilterSidebar
+          tempTitle={tempTitle}
+          setTempTitle={setTempTitle}
+          tempSelectedTags={tempSelectedTags}
+          handleTempTagChange={handleTempTagChange}
+          tempAccess={tempAccess}
+          setTempAccess={setTempAccess}
+          tempSort={tempSort}
+          setTempSort={setTempSort}
+          tagOptions={tagOptions}
+          onApply={applyFilters}
+        />
 
         <div className="flex-1">
-          {/* Books Grid - Modern Tokopedia-style layout */}
+          {/* Books Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-5 gap-3">
             {bookList.map((oneBook) => (
               <BookCard key={oneBook.id} oneBook={oneBook} />
