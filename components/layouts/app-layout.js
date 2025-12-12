@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 
 // refer to ui/sidebar
-const contentWidthOnSideOpen = "w-[calc(100%-16rem)]"
+const contentWidthOnSideOpen = "w-[calc(100%-14rem)]"
 const contentWidthOnSideClose = "w-[calc(100%-3rem)]"
 
 export default function AppLayout({ children }) {
@@ -136,7 +136,11 @@ export default function AppLayout({ children }) {
         <header className={`sticky top-0 flex justify-between shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-10 z-30 py-3 pb-2 px-3 bg-sidebar`}>
           <div className="flex items-center gap-2">
             {showSidebarTrigger && <SidebarTrigger />}
-            <BreadcrumbsButton />
+            {/* <BreadcrumbsButton /> */}
+            {
+              hasMoreThanOneSlash(pathName) &&
+              <Button size="sm7" variant="outline" onClick={() => router.back()}><ChevronLeft size={8} /> back</Button>
+            }
           </div>
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm7" onClick={() => window.location.reload()}>
@@ -152,8 +156,8 @@ export default function AppLayout({ children }) {
                 align="end"
                 sideOffset={4}
               >
-                <DropdownMenuItem onClick={()=>setTheme("light")}><Sun />Light Mode</DropdownMenuItem>
-                <DropdownMenuItem onClick={()=>setTheme("dark")}><Moon />Dark Mode</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("light")}><Sun />Light Mode</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("dark")}><Moon />Dark Mode</DropdownMenuItem>
                 <InstallButton />
               </DropdownMenuContent>
             </DropdownMenu>
@@ -175,4 +179,10 @@ export default function AppLayout({ children }) {
       </div>
     </>
   )
+}
+
+function hasMoreThanOneSlash(str) {
+  if (!str) { return false }
+  const matches = str.match(/\//g);
+  return matches !== null && matches.length > 1;
 }

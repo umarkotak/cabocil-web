@@ -48,7 +48,7 @@ function MediaThumb({ src, title, icon, redir }) {
             // @ts-ignore – HTMLImageElement target
             e.currentTarget.src = FALLBACK_THUMB
           }}
-          />
+        />
         <div className="absolute inset-0 bg-gradient-to-tr from-black/30 via-black/0 to-black/0" />
         {/* <div className="absolute inset-0 flex items-center justify-center">
           {icon}
@@ -58,7 +58,7 @@ function MediaThumb({ src, title, icon, redir }) {
   )
 }
 
-function VideoCard({ activity }) {
+function ActivityVideoCard({ activity }) {
   const router = useRouter()
   const data = activity?.video || {}
   const current = activity?.metadata?.current_progress ?? 0
@@ -69,25 +69,26 @@ function VideoCard({ activity }) {
 
   return (
     <Link href={redirect} className='flex-none shadow-md rounded-sm overflow-hidden group border border-secondary hover:border-accent'>
-      <div className={`w-[220px] h-[100px]`}>
-        <div className="flex flex-row gap-2 h-full">
-          <div className="relative flex-none">
-            <img
-              className={`flex-none object-contain bg-zinc-100 dark:bg-zinc-900 h-full w-[100px]`}
-              src={data?.image_url}
-              alt="thumb"
-            />
-            {/* {props.show_last_access && <div className="absolute bottom-0 w-full bg-black bg-opacity-50 text-[10px] p-0.5">
-              {utils.GetTimeElapsed(props.anime.last_watch_at)}
-            </div>} */}
-          </div>
-          <div className="flex flex-col justify-between">
-            <p className="text-xs line-clamp-2 pt-1">{title}</p>
+      <div className={`w-[220px] h-[100px] flex flex-row gap-2`}>
+        <div
+          style={{ '--image-url': `url(${data?.image_url})` }}
+          className="relative flex-none h-full w-[100px] bg-cover bg-(image:--image-url) bg-center"
+        >
+          <img
+            className={`object-contain w-full h-full backdrop-blur-sm`}
+            src={data?.image_url}
+            alt="thumb"
+          />
+          {/* {props.show_last_access && <div className="absolute bottom-0 w-full bg-black bg-opacity-50 text-[10px] p-0.5">
+            {utils.GetTimeElapsed(props.anime.last_watch_at)}
+          </div>} */}
+        </div>
+        <div className="flex flex-col justify-between">
+          <p className="text-xs line-clamp-2 pt-1">{title}</p>
 
-            <div className="flex flex-col pb-3">
-              <span className='text-xs'>{pct}%</span>
-              <span className='text-xs'>lanjut nonton</span>
-            </div>
+          <div className="flex flex-col pb-3">
+            <span className='text-xs'>{pct}%</span>
+            <span className='text-xs'>lanjut nonton</span>
           </div>
         </div>
       </div>
@@ -96,7 +97,7 @@ function VideoCard({ activity }) {
   )
 }
 
-function BookCard({ activity }) {
+function ActivityBookCard({ activity }) {
   const router = useRouter()
   const data = activity?.book || {}
   const current = activity?.metadata?.current_progress ?? 0
@@ -107,25 +108,26 @@ function BookCard({ activity }) {
 
   return (
     <Link href={redirect} className='flex-none shadow-md rounded-sm overflow-hidden group border border-secondary hover:border-accent'>
-      <div className={`w-[220px] h-[100px]`}>
-        <div className="flex flex-row gap-2 h-full">
-          <div className="relative flex-none">
-            <img
-              className={`flex-none object-contain bg-zinc-100 dark:bg-zinc-900 h-full w-[100px]`}
-              src={data?.image_url}
-              alt="thumb"
-            />
-            {/* {props.show_last_access && <div className="absolute bottom-0 w-full bg-black bg-opacity-50 text-[10px] p-0.5">
-              {utils.GetTimeElapsed(props.anime.last_watch_at)}
-            </div>} */}
-          </div>
-          <div className="flex flex-col justify-between">
-            <p className="text-xs line-clamp-2 pt-1">{title}</p>
+      <div className={`w-[220px] h-[100px] flex flex-row gap-2`}>
+        <div
+          style={{ '--image-url': `url(${data?.image_url})` }}
+          className="relative flex-none h-full w-[100px] bg-cover bg-(image:--image-url) bg-center"
+        >
+          <img
+            className={`object-contain w-full h-full backdrop-blur-sm`}
+            src={data?.image_url}
+            alt="thumb"
+          />
+          {/* {props.show_last_access && <div className="absolute bottom-0 w-full bg-black bg-opacity-50 text-[10px] p-0.5">
+            {utils.GetTimeElapsed(props.anime.last_watch_at)}
+          </div>} */}
+        </div>
+        <div className="flex flex-col justify-between">
+          <p className="text-xs line-clamp-2 pt-1">{title}</p>
 
-            <div className="flex flex-col pb-3">
-              <span className='text-xs'>{progressLabel(current, max)}</span>
-              <span className='text-xs'>lanjut baca</span>
-            </div>
+          <div className="flex flex-col pb-3">
+            <span className='text-xs'>{progressLabel(current, max)}</span>
+            <span className='text-xs'>lanjut baca</span>
           </div>
         </div>
       </div>
@@ -208,9 +210,9 @@ export default function ActivityBar() {
                 activity?.id ||
                 `${activity?.activity_type || 'item'}-${activity?.youtube_video_id || 'y'}-${activity?.book_id || 'b'}-${idx}`
               return (activity?.activity_type === 'video' ? (
-                <VideoCard key={key} activity={activity} />
+                <ActivityVideoCard key={key} activity={activity} />
               ) : (
-                <BookCard key={key} activity={activity} />
+                <ActivityBookCard key={key} activity={activity} />
               ))
             })}
           </>
@@ -220,4 +222,10 @@ export default function ActivityBar() {
       </div>
     </div>
   )
+}
+
+export {
+  ActivityBar,
+  ActivityVideoCard,
+  ActivityBookCard,
 }

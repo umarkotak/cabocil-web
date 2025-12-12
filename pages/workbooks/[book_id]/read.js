@@ -263,11 +263,10 @@ export default function Read() {
   return (
     <main>
       <div
-        className={`bg-background ${
-          isFullscreen
-            ? "fixed top-0 left-0 w-full h-screen z-50"
-            : "h-[calc(100vh-48px)] overflow-hidden"
-        }`}
+        className={`bg-background ${isFullscreen
+          ? "fixed top-0 left-0 w-full h-screen z-50"
+          : "h-[calc(100vh-48px)] overflow-hidden"
+          }`}
       >
         {!loadingComplete && (
           <div className="bg-gray-200 h-1.5">
@@ -277,21 +276,27 @@ export default function Read() {
             />
           </div>
         )}
+        {!bookDetail?.is_free && !bookDetail?.is_subscribed &&
+          <div className="flex justify-between items-center px-4 py-2 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert">
+            <span>
+              Silahkan berlangganan CaBocil premium untuk mendapat akses penuh buku ini
+            </span>
+            <Link href="/subscription/package" className="underline">Berlangganan Sekarang</Link>
+          </div>
+        }
 
         <div className="relative h-full">
           {visibleItems.map((page, index) => (
             <div
               key={`page-${page.id}-${index}`}
-              className={`relative w-full h-full ${
-                activePage?.image_file_url === page.image_file_url ? "block" : "hidden"
-              }`}
+              className={`relative w-full h-full ${activePage?.image_file_url === page.image_file_url ? "block" : "hidden"
+                }`}
             >
               <div
-                className={`shadow-md ${
-                  isFullscreen
-                    ? "object-contain absolute top-0 left-0 w-full h-screen"
-                    : "mx-auto h-full"
-                }`}
+                className={`shadow-md ${isFullscreen
+                  ? "object-contain absolute top-0 left-0 w-full h-screen"
+                  : "mx-auto h-full"
+                  }`}
               >
                 <ImageDrawer
                   imageUrl={page.image_file_url}
@@ -341,7 +346,8 @@ export default function Read() {
             >
               <BookOpen size={14} />
               <span>
-                {activePageNumber} / {maxPageNumber}
+                {/* {activePageNumber} / {maxPageNumber} */}
+                {activePageNumber} / {bookDetail?.max_page}
               </span>
             </button>
             <button
@@ -367,9 +373,8 @@ export default function Read() {
 
       {/* Page selection drawer */}
       <div
-        className={`fixed top-0 right-0 h-full w-80 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
-          isDrawerOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-0 right-0 h-full w-80 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${isDrawerOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         <div className="p-4 border-b border-gray-200">
           <div className="flex justify-between items-center">
@@ -404,11 +409,10 @@ export default function Read() {
               <button
                 onClick={handleDeleteSelectedPages}
                 disabled={selectedPageIds.length === 0 || isDeleting}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                  selectedPageIds.length === 0 || isDeleting
-                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                    : "bg-red-500 text-white hover:bg-red-600"
-                }`}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${selectedPageIds.length === 0 || isDeleting
+                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  : "bg-red-500 text-white hover:bg-red-600"
+                  }`}
               >
                 {isDeleting ? (
                   <>
@@ -431,13 +435,11 @@ export default function Read() {
             {visibleItems.map((page, index) => (
               <div
                 key={`drawer-page-${page.id}`}
-                className={`relative group transition-all duration-200 ${
-                  activePageNumber === index + 1 ? "ring-2 ring-blue-500 ring-offset-2" : ""
-                } ${
-                  bookDetail?.can_action && selectedPageIds.includes(page.id)
+                className={`relative group transition-all duration-200 ${activePageNumber === index + 1 ? "ring-2 ring-blue-500 ring-offset-2" : ""
+                  } ${bookDetail?.can_action && selectedPageIds.includes(page.id)
                     ? "ring-2 ring-red-500 ring-offset-2"
                     : ""
-                }`}
+                  }`}
               >
                 {/* Checkbox */}
                 {bookDetail?.can_action && (

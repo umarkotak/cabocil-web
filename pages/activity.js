@@ -12,6 +12,7 @@ import { PlayCircle, BookOpen, RefreshCw, Clock, GalleryHorizontalEnd } from 'lu
 import cabocilAPI from '@/apis/cabocil_api'
 import { toast } from 'react-toastify'
 import { useTheme } from 'next-themes'
+import { ActivityVideoCard, ActivityBookCard } from '@/components/ActivityBar'
 
 /**
  * Modernized Activities Page
@@ -48,88 +49,12 @@ function MediaThumb({ src, title, icon, redir }) {
             // @ts-ignore – HTMLImageElement target
             e.currentTarget.src = FALLBACK_THUMB
           }}
-          />
+        />
         <div className="absolute inset-0 bg-gradient-to-tr from-black/30 via-black/0 to-black/0" />
         {/* <div className="absolute inset-0 flex items-center justify-center">
           {icon}
         </div> */}
       </div>
-    </Link>
-  )
-}
-
-function VideoCard({ activity }) {
-  const router = useRouter()
-  const data = activity?.video || {}
-  const current = activity?.metadata?.current_progress ?? 0
-  const max = activity?.metadata?.max_progress ?? 0
-  const pct = percentFrom(current, max)
-  const title = data?.title || 'Untitled'
-  const redirect = data?.redirect_path
-
-  return (
-    <Link href={redirect} className='shadow-md rounded border border-accent overflow-hidden group hover:border-primary'>
-      <div className={`flex-none h-[100px]`}>
-        <div className="flex flex-row gap-2 h-full">
-          <div className="relative flex-none">
-            <img
-              className={`flex-none object-contain bg-zinc-100 dark:bg-zinc-900 h-full w-[100px]`}
-              src={data?.image_url}
-              alt="thumb"
-            />
-            {/* {props.show_last_access && <div className="absolute bottom-0 w-full bg-black bg-opacity-50 text-[10px] p-0.5">
-              {utils.GetTimeElapsed(props.anime.last_watch_at)}
-            </div>} */}
-          </div>
-          <div className="w-full flex flex-col justify-between p-2">
-            <p className="text-sm leading-1 line-clamp-2">{title}</p>
-
-            <div className="flex justify-between pb-1">
-              <span className='text-xs'>{pct}%</span>
-              <span className='text-xs'>lanjut nonton</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <Progress value={pct} className="h-1 rounded-none" />
-    </Link>
-  )
-}
-
-function BookCard({ activity }) {
-  const router = useRouter()
-  const data = activity?.book || {}
-  const current = activity?.metadata?.current_progress ?? 0
-  const max = activity?.metadata?.max_progress ?? 0
-  const pct = percentFrom(current, max)
-  const title = data?.title || `Book ${activity?.book_id ?? ''}`
-  const redirect = data?.redirect_path || "#"
-
-  return (
-    <Link href={redirect} className='shadow-md rounded border border-accent overflow-hidden group hover:border-primary'>
-      <div className={`flex-none h-[100px]`}>
-        <div className="flex flex-row gap-2 h-full">
-          <div className="relative flex-none">
-            <img
-              className={`flex-none object-contain bg-zinc-100 dark:bg-zinc-900 h-full w-[100px]`}
-              src={data?.image_url}
-              alt="thumb"
-            />
-            {/* {props.show_last_access && <div className="absolute bottom-0 w-full bg-black bg-opacity-50 text-[10px] p-0.5">
-              {utils.GetTimeElapsed(props.anime.last_watch_at)}
-            </div>} */}
-          </div>
-          <div className="w-full flex flex-col justify-between p-2">
-            <p className="text-sm leading-1 line-clamp-2">{title}</p>
-
-            <div className="flex justify-between pb-1">
-              <span className='text-xs'>{progressLabel(current, max)}</span>
-              <span className='text-xs'>lanjut baca</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <Progress value={pct} className="h-1 rounded-none" />
     </Link>
   )
 }
@@ -227,9 +152,9 @@ export default function UserActivitiesPage() {
               activity?.id ||
               `${activity?.activity_type || 'item'}-${activity?.youtube_video_id || 'y'}-${activity?.book_id || 'b'}-${idx}`
             return (activity?.activity_type === 'video' ? (
-              <VideoCard key={key} activity={activity} />
+              <ActivityVideoCard key={key} activity={activity} />
             ) : (
-              <BookCard key={key} activity={activity} />
+              <ActivityBookCard key={key} activity={activity} />
             ))
           })}
         </div>

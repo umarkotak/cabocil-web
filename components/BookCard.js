@@ -5,8 +5,8 @@ import {
 } from "@/components/ui/hover-card"
 import Link from "next/link"
 
-export default function BookCard({oneBook}) {
-  return(
+export default function BookCard({ oneBook }) {
+  return (
     <div>
       <HoverCard>
         <HoverCardTrigger asChild>
@@ -17,7 +17,7 @@ export default function BookCard({oneBook}) {
           >
             <div className="flex h-full flex-col rounded-lg border border-slate-200 bg-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden group-hover:shadow-md group-hover:shadow-accent">
               <div
-                style={{'--image-url': `url(${oneBook.cover_file_url})`}}
+                style={{ '--image-url': `url(${oneBook.cover_file_url})` }}
                 className={`relative aspect-2/3 overflow-hidden bg-contain  bg-repeat bg-(image:--image-url) bg-center`}
               >
                 <img
@@ -40,6 +40,13 @@ export default function BookCard({oneBook}) {
                     FREE
                   </div>
                 </div>}
+                {/* {!oneBook.is_free && <div className="absolute top-0 right-0 w-24 h-24 overflow-hidden">
+                  <div
+                    className="absolute top-3 right-[-73px] rotate-45 bg-blue-500 text-center text-xs font-semibold w-48 py-1 shadow-md"
+                  >
+                    PAID
+                  </div>
+                </div>} */}
               </div>
             </div>
           </a>

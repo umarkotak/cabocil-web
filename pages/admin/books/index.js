@@ -14,6 +14,7 @@ import { Card } from "@/components/ui/card";
 import { toast } from "react-toastify";
 import { RefreshCw } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
 
 export default function Books() {
   const [bookList, setBookList] = useState([]);
@@ -184,6 +185,12 @@ export default function Books() {
 
       const params = GetParams()
       GetBookList(params)
+
+      if (body.data.status_map && body.data.status_map.length > 0) {
+        setTimeout(() => {
+          GetUploadBookStatus(true);
+        }, 1000);
+      }
     } catch (e) {
       toast.error(e.message || "Failed to fetch status");
     } finally {
@@ -425,7 +432,7 @@ export default function Books() {
               <div
                 key={oneBook.id}
                 onClick={() => handleBookClick(oneBook)}
-                className="flex h-full flex-col rounded-lg border border-slate-200 bg-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden cursor-pointer"
+                className={`flex h-full flex-col rounded-lg border border-slate-200 bg-white transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden cursor-pointer ${oneBook.active ? '' : 'opacity-50'}`}
               >
                 <div
                   style={{ '--image-url': `url(${oneBook.cover_file_url})` }}
@@ -437,13 +444,10 @@ export default function Books() {
                     alt={`Cover of ${oneBook.title}`}
                     loading="lazy"
                   />
-                  {oneBook.is_free && <div className="absolute top-0 right-0 w-24 h-24 overflow-hidden">
-                    <div
-                      className="absolute top-3 right-[-73px] rotate-45 bg-accent text-center text-[8px] font-semibold w-48 py-0.5 shadow-md"
-                    >
-                      FREE
-                    </div>
-                  </div>}
+                  <div className="absolute top-1 right-1 flex flex-row flex-wrap gap-1">
+                    <Badge>{oneBook.is_free ? 'free' : 'paid'}</Badge>
+                    <Badge>{oneBook.storage}</Badge>
+                  </div>
                 </div>
               </div>
             ))}

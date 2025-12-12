@@ -46,7 +46,7 @@ export default function Read() {
     if (pageIndex <= 0) { pageIndex = 0 }
     if (pageIndex >= tmpMaxPageNumber) { pageIndex = tmpMaxPageNumber - 1 }
 
-    setActivePageNumber(pageIndex+1)
+    setActivePageNumber(pageIndex + 1)
 
     if (!tmpBookDetail.contents[pageIndex] || !tmpBookDetail.contents[pageIndex].image_file_url) { return }
     setActivePage(tmpBookDetail.contents[pageIndex])
@@ -62,8 +62,8 @@ export default function Read() {
         book_id: bookID
       })
       const body = await response.json()
-      if(response.status === 400){
-        if (body.error.code === "subscription_required"){
+      if (response.status === 400) {
+        if (body.error.code === "subscription_required") {
           setErrNeedSubscription(true)
           return
         }
@@ -86,7 +86,7 @@ export default function Read() {
       };
 
       let index = 0
-      for(const oneContent of tmpBookDetail.contents) {
+      for (const oneContent of tmpBookDetail.contents) {
         await preloadImage(oneContent.image_file_url);
         // console.log(`PRELOADED ${index+1} / ${tmpMaxPageNumber}`)
         if (index === parseInt(tmpMaxPageNumber / 4)) {
@@ -186,7 +186,7 @@ export default function Read() {
     if (activePageNumber >= tmpMaxPageNumber) { return }
     router.push({
       pathname: `/books/${router.query.book_id}/read`,
-      search: `?page=${activePageNumber+1}`
+      search: `?page=${activePageNumber + 1}`
     })
   }
 
@@ -194,7 +194,7 @@ export default function Read() {
     if (activePageNumber <= 1) { return }
     router.push({
       pathname: `/books/${router.query.book_id}/read`,
-      search: `?page=${activePageNumber-1}`
+      search: `?page=${activePageNumber - 1}`
     })
   }
 
@@ -248,10 +248,15 @@ export default function Read() {
     }
   };
 
-  return(
+  return (
     <main className="">
-      {errNeedSubscription &&
-        <div className="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert"> Kamu harus berlangganan CaBocil premium untuk mengakses buku ini. <Link href="/subscription/package" className="underline">Berlangganan Sekarang</Link>.</div>
+      {!bookDetail?.is_free && !bookDetail?.is_subscribed &&
+        <div className="flex justify-between items-center px-4 py-2 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert">
+          <span>
+            Silahkan berlangganan CaBocil premium untuk mendapat akses penuh buku ini
+          </span>
+          <Link href="/subscription/package" className="underline">Berlangganan Sekarang</Link>
+        </div>
       }
 
       {!loadingComplete && <div className="bg-gray-200 h-1.5">
@@ -277,8 +282,8 @@ export default function Read() {
               max-h-[calc(100vh-60px)] object-contain mx-auto
             `} ${activePage.image_file_url === page.image_file_url ? "block" : "hidden"}`}
             src={page.image_file_url}
-            onLoad={()=>handleImageLoad()}
-            onError={()=>handleImageLoad()}
+            onLoad={() => handleImageLoad()}
+            onError={() => handleImageLoad()}
           />
         ))}
 
@@ -332,9 +337,8 @@ export default function Read() {
       )}
 
       {/* Page selection drawer */}
-      <div className={`fixed top-0 right-0 h-full w-80 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
-        isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
-      }`}>
+      <div className={`fixed top-0 right-0 h-full w-80 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}>
         <div className="p-4 border-b border-gray-200">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold text-gray-800">Select Page</h3>
@@ -367,11 +371,10 @@ export default function Read() {
               <button
                 onClick={DeleteSelectedPages}
                 disabled={selectedPageIds.length === 0 || isDeleting}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                  selectedPageIds.length === 0 || isDeleting
-                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                    : 'bg-red-500 text-white hover:bg-red-600'
-                }`}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${selectedPageIds.length === 0 || isDeleting
+                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  : 'bg-red-500 text-white hover:bg-red-600'
+                  }`}
               >
                 {isDeleting ? (
                   <>
@@ -394,16 +397,14 @@ export default function Read() {
             {visibleItems && visibleItems.map((page, index) => (
               <div
                 key={index}
-                className={`relative cursor-pointer group transition-all duration-200 ${
-                  activePageNumber === index + 1
-                    ? 'ring-2 ring-blue-500 ring-offset-2'
-                    : 'hover:scale-105 hover:shadow-lg'
-                } ${
-                  bookDetail.can_action && selectedPageIds.includes(page.id)
+                className={`relative cursor-pointer group transition-all duration-200 ${activePageNumber === index + 1
+                  ? 'ring-2 ring-blue-500 ring-offset-2'
+                  : 'hover:scale-105 hover:shadow-lg'
+                  } ${bookDetail.can_action && selectedPageIds.includes(page.id)
                     ? 'ring-2 ring-red-500 ring-offset-2'
                     : ''
-                }`}
-                // onClick={() => GoToPage(index + 1)}
+                  }`}
+              // onClick={() => GoToPage(index + 1)}
               >
                 {/* Checkbox */}
                 {bookDetail?.can_action && (
