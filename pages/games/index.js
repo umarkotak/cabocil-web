@@ -2,7 +2,8 @@ import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Apple, BatteryCharging, Beaker, BeefIcon, BoltIcon, BotIcon, BrickWall, Calculator, CarIcon, Cat, CatIcon, Circle, CircleAlert, FlipHorizontal, FlowerIcon, Gamepad2, GlassWater, HouseIcon, LandPlot, LayoutTemplate, Orbit, Pencil, Plane, Puzzle, StickerIcon, Truck, UserCircle, UserRoundCogIcon, UsersRoundIcon, Waypoints, Workflow } from 'lucide-react'
 
-const GAME_LIST = [
+// Internal games - hosted within the app
+const INTERNAL_GAMES = [
   {
     key: "/games/maze",
     link: "/games/maze",
@@ -11,8 +12,8 @@ const GAME_LIST = [
     label: "Labirin"
   },
   {
-    key: "/games/maze",
-    link: "/games/maze",
+    key: "/games/puzzle",
+    link: "/games/puzzle",
     image: "/images/game_ico_puzzle.png",
     icon: <Puzzle size={24} />,
     label: "Puzzle"
@@ -24,6 +25,10 @@ const GAME_LIST = [
     icon: <FlowerIcon size={24} />,
     label: "Membuat Peta"
   },
+]
+
+// External games - third party hosted games
+const EXTERNAL_GAMES = [
   {
     key: "/games/golf",
     link: "/games/golf",
@@ -31,21 +36,16 @@ const GAME_LIST = [
     icon: <LandPlot size={24} />,
     label: "Golf"
   },
+]
+
+// Poki games - games from Poki platform
+const POKI_GAMES = [
   {
     key: "/games/happy-glass",
     link: `https://5cac4523-71ea-476e-8acc-a6cb9c25cc06.poki-gdn.com/2719f5f7-a059-44f1-860d-2e8e1c70b9fd/index.html?country=ID&ccpaApplies=0&url_referrer=https%3A%2F%2Fpoki.com%2F&tag=pg-ac4e68e34b97424608f5f2170b1a77c9559f8393&site_id=74&iso_lang=id&poki_url=https%3A%2F%2Fpoki.com%2Fid%2Fg%2Fhappy-glass&hoist=yes&nonPersonalized=n&cloudsavegames=n&familyFriendly=n&categories=7%2C34%2C37%2C72%2C400%2C1013%2C1140%2C1143%2C1190&special_condition=landing&game_id=5cac4523-71ea-476e-8acc-a6cb9c25cc06&game_version_id=2719f5f7-a059-44f1-860d-2e8e1c70b9fd&inspector=0&csp=1","onPoki":true,"onKids":false,"isLocal":false,"gameID":"5cac4523-71ea-476e-8acc-a6cb9c25cc06`,
     image: "/images/game_ico_water.png",
     icon: <GlassWater size={24} />,
     label: "Isi Air",
-    mode: "external",
-  },
-  {
-    key: "/games/level-devil",
-    link: `https://13acae8c-ec6a-4823-b1a2-8ea20cea56e7.poki-gdn.com/28edc61e-5dd6-478a-a970-edee95166353/index.html`,
-    image: "/images/game_ico_rintangan.png",
-    icon: <UsersRoundIcon size={24} />,
-    label: "Rintangan",
-    mode: "external",
   },
   {
     key: "/games/sticker-puzzle",
@@ -53,7 +53,6 @@ const GAME_LIST = [
     image: "/images/game_ico_sticker.png",
     icon: <StickerIcon size={24} />,
     label: "Tempel Sticker",
-    mode: "external",
   },
   {
     key: "/games/mine-fun",
@@ -61,7 +60,6 @@ const GAME_LIST = [
     image: "/images/game_ico_parkour.png",
     icon: <UserRoundCogIcon size={24} />,
     label: "Parkour",
-    mode: "external",
   },
   {
     key: "/games/drive-mad",
@@ -69,7 +67,6 @@ const GAME_LIST = [
     image: "/images/game_ico_mobilmuter.png",
     icon: <CarIcon size={24} />,
     label: "Mobilan",
-    mode: "external",
   },
   {
     key: "/games/aritmathic",
@@ -77,7 +74,6 @@ const GAME_LIST = [
     image: "/images/game_ico_aritmath.png",
     icon: <Calculator size={24} />,
     label: "Hitung Cepat",
-    mode: "external",
   },
   {
     key: "/games/potion",
@@ -85,7 +81,6 @@ const GAME_LIST = [
     image: "/images/game_ico_potion.png",
     icon: <GlassWater size={24} />,
     label: "Campur Ramuan",
-    mode: "external",
   },
   {
     key: "/games/house_renovation",
@@ -93,7 +88,6 @@ const GAME_LIST = [
     image: "/images/game_ico_house_renov.png",
     icon: <HouseIcon size={24} />,
     label: "Hias Rumah",
-    mode: "external",
   },
   {
     key: "/games/cat_pizza",
@@ -101,7 +95,6 @@ const GAME_LIST = [
     image: "/images/game_ico_cat_pizza.png",
     icon: <CatIcon size={24} />,
     label: "Kucing Pizza",
-    mode: "external",
   },
   {
     key: "/games/bolt",
@@ -109,7 +102,6 @@ const GAME_LIST = [
     image: "/images/game_ico_bolt.png",
     icon: <BoltIcon size={24} />,
     label: "Lepas Baut",
-    mode: "external",
   },
   {
     key: "/games/join_ball",
@@ -117,7 +109,6 @@ const GAME_LIST = [
     image: "/images/game_ico_join_ball.png",
     icon: <Circle size={24} />,
     label: "Gabung Bola",
-    mode: "external",
   },
   {
     key: "/games/grandpa_journey",
@@ -125,7 +116,6 @@ const GAME_LIST = [
     image: "/images/game_ico_grandpa_journey.png",
     icon: <UserCircle size={24} />,
     label: "Kakek Petualang",
-    mode: "external",
   },
   {
     key: "/games/experiment",
@@ -133,7 +123,6 @@ const GAME_LIST = [
     image: "/images/game_ico_experiment.png",
     icon: <Beaker size={24} />,
     label: "Eksperimen",
-    mode: "external",
   },
   {
     key: "/games/truck_road",
@@ -141,7 +130,6 @@ const GAME_LIST = [
     image: "/images/game_ico_truck_road.png",
     icon: <Truck size={24} />,
     label: "Jalan Truck",
-    mode: "external",
   },
   {
     key: "/games/bee_attack",
@@ -149,7 +137,6 @@ const GAME_LIST = [
     image: "/images/game_ico_bee_attack.png",
     icon: <BeefIcon size={24} />,
     label: "Serangan Lebah",
-    mode: "external",
   },
   {
     key: "/games/find_cat",
@@ -157,7 +144,6 @@ const GAME_LIST = [
     image: "/images/game_ico_find_cat.png",
     icon: <Cat size={24} />,
     label: "Cari Kucing",
-    mode: "external",
   },
   {
     key: "/games/paper_block",
@@ -165,7 +151,6 @@ const GAME_LIST = [
     image: "/images/game_ico_paper_block.png",
     icon: <Puzzle size={24} />,
     label: "Susun Balok",
-    mode: "external",
   },
   {
     key: "/games/electric",
@@ -173,7 +158,6 @@ const GAME_LIST = [
     image: "/images/game_ico_electric.png",
     icon: <BatteryCharging size={24} />,
     label: "Sambung Kabel",
-    mode: "external",
   },
   {
     key: "/games/pull_robot",
@@ -181,7 +165,6 @@ const GAME_LIST = [
     image: "/images/game_ico_pull_robot.png",
     icon: <BotIcon size={24} />,
     label: "Tarik Robot",
-    mode: "external",
   },
   {
     key: "/games/roll_ball",
@@ -189,7 +172,6 @@ const GAME_LIST = [
     image: "/images/game_ico_roll_ball.png",
     icon: <CircleAlert size={24} />,
     label: "Bola Muter",
-    mode: "external",
   },
   {
     key: "/games/long_cat",
@@ -197,7 +179,6 @@ const GAME_LIST = [
     image: "/images/game_ico_long_cat.png",
     icon: <Cat size={24} />,
     label: "Kucing Panjang",
-    mode: "external",
   },
   {
     key: "/games/subway_surfer",
@@ -205,7 +186,6 @@ const GAME_LIST = [
     image: "/images/game_ico_subway_surfer.png",
     icon: <Orbit size={24} />,
     label: "Subway Surfer",
-    mode: "external",
   },
   {
     key: "/games/temple_run",
@@ -213,7 +193,6 @@ const GAME_LIST = [
     image: "/images/game_ico_temple_run.png",
     icon: <LayoutTemplate size={24} />,
     label: "Temple Run",
-    mode: "external",
   },
   {
     key: "/games/parkir_pesawat",
@@ -221,7 +200,6 @@ const GAME_LIST = [
     image: "/images/game_ico_parkir_pesawat.png",
     icon: <Plane size={24} />,
     label: "Parkir Pesawat",
-    mode: "external",
   },
   {
     key: "/games/cari_perbedaan",
@@ -229,7 +207,6 @@ const GAME_LIST = [
     image: "/images/game_ico_cari_perbedaan.png",
     icon: <FlipHorizontal size={24} />,
     label: "Cari Perbedaan",
-    mode: "external",
   },
   {
     key: "/games/penuhi_garis",
@@ -237,7 +214,6 @@ const GAME_LIST = [
     image: "/images/game_ico_penuhi_garis.png",
     icon: <Waypoints size={24} />,
     label: "Penuhi Garis",
-    mode: "external",
   },
   {
     key: "/games/onet",
@@ -245,7 +221,6 @@ const GAME_LIST = [
     image: "/images/game_ico_onet.png",
     icon: <Workflow size={24} />,
     label: "Onet",
-    mode: "external",
   },
   {
     key: "/games/dadish",
@@ -253,13 +228,96 @@ const GAME_LIST = [
     image: "/images/game_ico_dadish.png",
     icon: <Apple size={24} />,
     label: "Dadish",
-    mode: "external",
   },
 ]
 
+// Reusable Game Card Component
+function GameCard({ game, isExternal = false }) {
+  const cardContent = (
+    <div className='flex flex-col gap-2 border shadow-sm p-2 rounded-lg bg-white dark:bg-slate-800 w-36 sm:w-40 flex-shrink-0'>
+      <img
+        src={game.image}
+        className='rounded-lg shadow-sm object-contain w-full h-28 sm:h-32'
+        alt={game.label}
+      />
+      <h1 className='text-base flex gap-1 items-center justify-center text-center line-clamp-1'>
+        {game.label}
+      </h1>
+    </div>
+  )
+
+  if (isExternal) {
+    return (
+      <a key={game.key} href={game.link} className='hover:scale-105 duration-300' rel="noopener noreferrer">
+        {cardContent}
+      </a>
+    )
+  }
+
+  return (
+    <Link key={game.key} href={game.link} className='hover:scale-105 duration-300'>
+      {cardContent}
+    </Link>
+  )
+}
+
+// Horizontal Scroll Section with 1 rows
+function GameSection1({ title, games, isExternal = false }) {
+  return (
+    <div className="mb-8">
+      <h2 className="text-xl sm:text-2xl font-semibold mb-4 dark:text-white text-slate-800">
+        {title}
+      </h2>
+      <div className="overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600">
+        <div className="flex flex-col gap-4 min-w-max">
+          <div className="flex gap-4">
+            {games.map((game) => (
+              <GameCard key={game.key} game={game} isExternal={isExternal} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Horizontal Scroll Section with 2 rows
+function GameSection2({ title, games, isExternal = false }) {
+  // Split games into 2 rows
+  const midpoint = Math.ceil(games.length / 2)
+  const row1 = games.slice(0, midpoint)
+  const row2 = games.slice(midpoint)
+
+  return (
+    <div className="mb-8">
+      <h2 className="text-xl sm:text-2xl font-semibold mb-4 dark:text-white text-slate-800">
+        {title}
+      </h2>
+      <div className="overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600">
+        <div className="flex flex-col gap-4 min-w-max">
+          {/* Row 1 */}
+          <div className="flex gap-4">
+            {row1.map((game) => (
+              <GameCard key={game.key} game={game} isExternal={isExternal} />
+            ))}
+          </div>
+          {/* Row 2 */}
+          {row2.length > 0 && (
+            <div className="flex gap-4">
+              {row2.map((game) => (
+                <GameCard key={game.key} game={game} isExternal={isExternal} />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function Page() {
   return (
-    <div className="w-full max-w-[1024px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div className="w-full px-4 sm:px-6 lg:px-8 py-10">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-3">
           <Gamepad2 />
@@ -271,29 +329,26 @@ export default function Page() {
         <div></div>
       </div>
 
-      <div className="w-full max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-6">
-        {GAME_LIST.map((game) => (
-          game.mode === "external"
-          ? <a key={game.key} href={game.link} className='hover:scale-105 duration-300' rel={"noopener noreferrer"}>
-            <div className='flex flex-col gap-2 border shadow-sm p-2 rounded-lg'>
-              <img
-                src={game.image}
-                className='rounded-lg shadow-sm object-contain w-full h-full'
-              />
-              <h1 className='text-xl flex gap-1 items-center justify-center'>{game.icon} {game.label}</h1>
-            </div>
-          </a>
-          : <Link key={game.key} href={game.link} className='hover:scale-105 duration-300'>
-            <div className='flex flex-col gap-2 border shadow-sm p-2 rounded-lg'>
-              <img
-                src={game.image}
-                className='rounded-lg shadow-sm object-contain w-full h-full'
-              />
-              <h1 className='text-xl flex gap-1 items-center justify-center'>{game.icon} {game.label}</h1>
-            </div>
-          </Link>
-        ))}
-      </div>
+      {/* Internal Games Section */}
+      <GameSection1
+        title="🎮 Games By CaBocil"
+        games={INTERNAL_GAMES}
+        isExternal={false}
+      />
+
+      {/* External Games Section */}
+      <GameSection1
+        title="🌐 Games By Other Devs"
+        games={EXTERNAL_GAMES}
+        isExternal={true}
+      />
+
+      {/* Poki Games Section */}
+      <GameSection2
+        title="🎯 Games By Poki"
+        games={POKI_GAMES}
+        isExternal={true}
+      />
     </div>
   )
 }

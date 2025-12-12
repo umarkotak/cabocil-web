@@ -41,11 +41,9 @@ const PuzzleGame = () => {
 
   // Predefined image gallery
   const imageGallery = [
-    { id: 1, url: '/images/game_ico_car.png', title: 'Main mobil mobilan', category: 'Anime' },
     { id: 2, url: '/images/game_ico_flowchart.png', title: 'Main lego', category: 'Anime' },
     { id: 3, url: '/images/game_ico_maze.png', title: 'Menghadapi labirin', category: 'Anime' },
     { id: 4, url: '/images/game_ico_puzzle.png', title: 'Main puzzle', category: 'Anime' },
-    { id: 5, url: '/images/game_ico_snake.png', title: 'Dikejar ular', category: 'Anime' },
   ];
 
   // Initialize puzzle pieces
@@ -190,12 +188,12 @@ const PuzzleGame = () => {
         className={`relative cursor-pointer transition-all duration-200 select-none overflow-hidden ${
           // Add border and rounding only when in the spare area
           piece.inSpareArea ? 'rounded-md border border-border' : ''
-        } ${
+          } ${
           // The ring effect for selection works everywhere
           isSelected
             ? 'scale-105 shadow-lg ring-2 ring-primary z-10'
             : 'hover:scale-[1.02] hover:shadow-md'
-        }`}
+          }`}
         style={{
           width: `${PIECE_SIZE}px`,
           height: `${PIECE_SIZE}px`,
@@ -255,17 +253,11 @@ const PuzzleGame = () => {
     <div className="bg-gradient-to-br from-background to-muted/50">
       <div className="relative">
         <PreviewOverlay />
-        
+
         <div className="mb-6">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
             <div className="text-center lg:text-left">
               <h1 className="text-3xl font-bold text-foreground mb-2">Puzzle Game</h1>
-              {selectedPiece && (
-                <Badge variant="secondary" className="animate-pulse">
-                  <Sparkles className="w-3 h-3 mr-1" />
-                  Piece selected - click to place
-                </Badge>
-              )}
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
@@ -283,15 +275,15 @@ const PuzzleGame = () => {
                   </Button>
                 ))}
               </div>
-              
+
               <Button onClick={handleShuffle} size="sm" variant="secondary">
                 <Shuffle className="w-4 h-4 mr-1" />
                 Shuffle
               </Button>
 
-              <Button 
-                onClick={() => setShowPreview(true)} 
-                size="sm" 
+              <Button
+                onClick={() => setShowPreview(true)}
+                size="sm"
                 variant="outline"
               >
                 <Eye className="w-4 h-4 mr-1" />
@@ -338,7 +330,7 @@ const PuzzleGame = () => {
                       </div>
                     ))}
                   </div>
-                  
+
                   <div className="mt-6 pt-4 border-t">
                     <Label className="text-sm font-medium">Or use custom image URL:</Label>
                     <div className="flex gap-2 mt-2">
@@ -354,11 +346,11 @@ const PuzzleGame = () => {
                           }
                         }}
                       />
-                      <Button 
+                      <Button
                         onClick={() => {
                           handleImageSubmit();
                           setIsImageModalOpen(false);
-                        }} 
+                        }}
                         size="sm"
                       >
                         Use URL
@@ -388,11 +380,10 @@ const PuzzleGame = () => {
               <CardContent>
                 <div
                   onClick={handleSpareAreaClick}
-                  className={`min-h-[300px] bg-muted/30 rounded-lg p-3 border-2 border-dashed transition-colors ${
-                    selectedPiece && !selectedPiece.inSpareArea
-                      ? 'border-green-400 bg-green-50 dark:bg-green-950/20 cursor-pointer'
-                      : 'border-muted-foreground/30'
-                  }`}
+                  className={`min-h-[300px] bg-muted/30 rounded-lg p-3 border-2 border-dashed transition-colors ${selectedPiece && !selectedPiece.inSpareArea
+                    ? 'border-green-400 bg-green-50 dark:bg-green-950/20 cursor-pointer'
+                    : 'border-muted-foreground/30'
+                    }`}
                 >
                   <div className="flex flex-wrap gap-2">
                     {pieces.filter(p => p.inSpareArea).map(piece => (
@@ -400,6 +391,13 @@ const PuzzleGame = () => {
                     ))}
                   </div>
                 </div>
+
+                {selectedPiece && (
+                  <Badge variant="secondary" className="animate-pulse">
+                    <Sparkles className="w-3 h-3 mr-1" />
+                    Piece selected - click to place
+                  </Badge>
+                )}
               </CardContent>
             </Card>
           </div>
@@ -423,7 +421,7 @@ const PuzzleGame = () => {
                       gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
                       width: `${PIECE_SIZE * gridSize}px`, // Precise width
                       height: `${PIECE_SIZE * gridSize}px`, // Precise height
-                      overflow: 'hidden',
+                      // overflow: 'hidden',
                       borderRadius: '4px' // To match the parent's rounding
                     }}
                   >
