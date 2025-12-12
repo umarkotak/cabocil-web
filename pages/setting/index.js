@@ -9,17 +9,17 @@ const Utils = {
 
 // Configuration keys
 const QUIZ_CONFIG_KEYS = {
-  QUIZ_ENABLE: "COOKIEKID:QUIZ:ENABLE",
-  SHOW_ANSWER: "COOKIEKID:QUIZ:SHOW_ANSWER",
-  ALLOW_DISMISS: "COOKIEKID:QUIZ:ALLOW_DISMISS",
-  CHANGE_QUESTION_ON_WRONG: "COOKIEKID:QUIZ:CHANGE_QUESTION_ON_WRONG"
+  QUIZ_ENABLE: "CABOCIL:QUIZ:ENABLE",
+  SHOW_ANSWER: "CABOCIL:QUIZ:SHOW_ANSWER",
+  ALLOW_DISMISS: "CABOCIL:QUIZ:ALLOW_DISMISS",
+  CHANGE_QUESTION_ON_WRONG: "CABOCIL:QUIZ:CHANGE_QUESTION_ON_WRONG"
 };
 
 const GENERAL_CONFIG_KEYS = {
-  DARK_MODE: "COOKIEKID:GENERAL:DARK_MODE",
-  NOTIFICATIONS: "COOKIEKID:GENERAL:NOTIFICATIONS",
-  AUTO_SAVE: "COOKIEKID:GENERAL:AUTO_SAVE",
-  SOUND_EFFECTS: "COOKIEKID:GENERAL:SOUND_EFFECTS"
+  DARK_MODE: "CABOCIL:GENERAL:DARK_MODE",
+  NOTIFICATIONS: "CABOCIL:GENERAL:NOTIFICATIONS",
+  AUTO_SAVE: "CABOCIL:GENERAL:AUTO_SAVE",
+  SOUND_EFFECTS: "CABOCIL:GENERAL:SOUND_EFFECTS"
 };
 
 // Quiz settings configuration
@@ -157,11 +157,10 @@ function TabButton({ tab, isActive, onClick }) {
   return (
     <button
       onClick={() => onClick(tab.id)}
-      className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
-        isActive
+      className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2 ${isActive
           ? "bg-blue-100 text-blue-700 border border-blue-200 shadow-sm"
           : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 border border-transparent"
-      }`}
+        }`}
     >
       <span className="text-base">{tab.icon}</span>
       <span className="hidden sm:inline">{tab.label}</span>
@@ -351,9 +350,8 @@ export default function Settings() {
       {!isUnlocked && <MathChallenge onUnlock={handleUnlock} />}
 
       {/* Main Content */}
-      <div className={`transition-all duration-300 ${
-        !isUnlocked ? "opacity-50 pointer-events-none" : "opacity-100"
-      }`}>
+      <div className={`transition-all duration-300 ${!isUnlocked ? "opacity-50 pointer-events-none" : "opacity-100"
+        }`}>
 
         {/* Mobile Tabs - Horizontal scroll */}
         <div className="mb-4">

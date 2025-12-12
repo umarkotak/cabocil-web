@@ -180,8 +180,8 @@ export default function Channels() {
                 <Link href={`/admin/channels/${oneChannel.id}/edit`} className='group flex-1'>
                   <div className='flex items-center gap-3'>
                     <Avatar className="h-14 w-14 group-hover:scale-105">
-                      <AvatarImage src={oneChannel.image_url}/>
-                      <AvatarFallback><img src="/images/cookie_kid_logo_circle.png" /></AvatarFallback>
+                      <AvatarImage src={oneChannel.image_url} />
+                      <AvatarFallback><img src="/icons/cabocil-logo-clear.png" /></AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
                       <div className='group-hover:text-amber-600 text-sm line-clamp-2'>{oneChannel.name}</div>

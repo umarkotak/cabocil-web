@@ -35,7 +35,7 @@ export default function Watch() {
 
   const [videoPlayerHeight, setVideoPlayerHeight] = useState(0)
   const [mobileMode, setMobileMode] = useState(true)
-  const [videoDetail, setVideoDetail] = useState({channel: {}})
+  const [videoDetail, setVideoDetail] = useState({ channel: {} })
   const [suggestionVideos, setSuggestionVideos] = useState([])
   const [blockVideoRecomm, setBlockVideoRecomm] = useState(false)
   const [quizTs, setQuizTs] = useState(0)
@@ -55,7 +55,7 @@ export default function Watch() {
 
 
   useEffect(() => {
-    if (typeof(window) === "undefined") { return }
+    if (typeof (window) === "undefined") { return }
 
     if (window.innerWidth <= mobileModeLimit) {
       setMobileMode(true)
@@ -100,7 +100,7 @@ export default function Watch() {
 
     GetChannelVideos()
 
-    if (localStorage && localStorage.getItem("COOKIEKID:QUIZ:ENABLE") !== "off") {
+    if (localStorage && localStorage.getItem("CABOCIL:QUIZ:ENABLE") !== "off") {
       setQuizTs(Date.now())
     }
   }, [router])
@@ -139,7 +139,7 @@ export default function Watch() {
 
   useEffect(() => {
     const execCallback = () => {
-      if (localStorage.getItem("COOKIEKID:QUIZ:ENABLE") === "off") {
+      if (localStorage.getItem("CABOCIL:QUIZ:ENABLE") === "off") {
         return
       }
 
@@ -149,7 +149,7 @@ export default function Watch() {
           } else {
             document.exitFullscreen()
           }
-        } catch(e) {}
+        } catch (e) { }
       }
 
       setQuizTs(Date.now())
@@ -178,11 +178,11 @@ export default function Watch() {
     const currentSeconds = Math.floor(rPlayerRef.current.currentTime);
 
     // if (currentSeconds > lastRecordedTimeRef.current + sendInterval) {
-      RecordVideoWatchActivity(currentSeconds, Math.floor(rPlayerRef.current.duration));
-      // Update the ref to the current time
-      // lastRecordedTimeRef.current = currentSeconds;
+    RecordVideoWatchActivity(currentSeconds, Math.floor(rPlayerRef.current.duration));
+    // Update the ref to the current time
+    // lastRecordedTimeRef.current = currentSeconds;
 
-      // console.warn("REF", Math.floor(rPlayerRef.current.currentTime), Math.floor(rPlayerRef.current.duration))
+    // console.warn("REF", Math.floor(rPlayerRef.current.currentTime), Math.floor(rPlayerRef.current.duration))
     // }
   };
 
@@ -196,7 +196,7 @@ export default function Watch() {
       <div className='sticky top-[44px] z-10 md:block w-full bg-background'>
         <div className='w-full' ref={videoPlayerDivRef} id="video-content">
           <div className={`w-full md:relative overflow-hidden shadow-md`}>
-            <div className='w-full' style={{height: `${videoPlayerHeight}px`}}>
+            <div className='w-full' style={{ height: `${videoPlayerHeight}px` }}>
               {/* <MediaController
                 style={{
                   width: "100%",
@@ -227,15 +227,15 @@ export default function Watch() {
                   <MediaFullscreenButton />
                 </MediaControlBar>
               </MediaController> */}
-                <ReactPlayer
-                  ref={rPlayerRef}
-                  src={`https://www.youtube.com/watch?v=${videoDetail.external_id}`}
-                  style={{ width: '100%', height: '100%' }}
-                  playing={playerPlaying}
-                  controls={true}
-                  onProgress={handleVideoProgress}
-                  onPause={handlePause}
-                />
+              <ReactPlayer
+                ref={rPlayerRef}
+                src={`https://www.youtube.com/watch?v=${videoDetail.external_id}`}
+                style={{ width: '100%', height: '100%' }}
+                playing={playerPlaying}
+                controls={true}
+                onProgress={handleVideoProgress}
+                onPause={handlePause}
+              />
             </div>
             {/* <div
               className='absolute right-[55px] bottom-0 w-28 rounded h-8 bg-red-100 bg-opacity-0'
@@ -255,7 +255,7 @@ export default function Watch() {
               <Link href={`/channels/${videoDetail.channel.id}`} className='flex-none flex items-center gap-4 hover:bg-accent'>
                 <Avatar>
                   <AvatarImage src={videoDetail.channel.image_url} />
-                  <AvatarFallback><img src="/images/cookie_kid_logo_circle.png" /></AvatarFallback>
+                  <AvatarFallback><img src="/icons/cabocil-logo-clear.png" /></AvatarFallback>
                 </Avatar>
                 <span className='text-sm font-semibold'>{videoDetail.channel.name}</span>
               </Link>
@@ -266,12 +266,12 @@ export default function Watch() {
 
       <div id="suggestion-content" className={`flex-none w-full ${openRecomendations ? "md:w-[402px]" : "md:w-[90px]"} flex flex-col gap-5 sm:h-[calc(100vh-60px)] sm:overflow-auto relative`}>
         <div className='hidden md:flex sticky top-0 bg-background z-10'>
-          <Button size="sm7" onClick={()=>{setOpenRecomendations(!openRecomendations)}}>
+          <Button size="sm7" onClick={() => { setOpenRecomendations(!openRecomendations) }}>
             {openRecomendations ? <ChevronRight size={10} /> : <ChevronLeft size={10} />}
           </Button>
         </div>
 
-        {suggestionVideos.map((oneVideo)=>(
+        {suggestionVideos.map((oneVideo) => (
           <div className='group flex flex-row gap-2 hover:text-amber-600' key={oneVideo.id}>
             <div className='flex-none w-[169px] h-[94px] overflow-hidden'>
               <Link href={`/watch/${oneVideo.id}`}>
@@ -290,7 +290,7 @@ export default function Watch() {
               <Link href={`/channels/${oneVideo.channel.id}`} className="flex flex-row gap-2 text-sm items-center">
                 <Avatar className="h-6 w-6">
                   <AvatarImage src={oneVideo.channel.image_url} />
-                  <AvatarFallback><img src="/images/cookie_kid_logo_circle.png" /></AvatarFallback>
+                  <AvatarFallback><img src="/icons/cabocil-logo-clear.png" /></AvatarFallback>
                 </Avatar>
                 <span className='flex-auto text-[12px] line-clamp-2'>{oneVideo.channel.name}</span>
               </Link>

@@ -10,7 +10,7 @@ export default function ChannelList({ channelId, channelImageUrl, channelName })
           <Avatar className="h-16 w-16 ring-2 ring-transparent group-hover:ring-indigo-500 transition-all duration-300 shadow-md">
             <AvatarImage src={channelImageUrl} className="object-cover" />
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <AvatarFallback><img src="/images/cookie_kid_logo_circle.png" alt="fallback" /></AvatarFallback>
+            <AvatarFallback><img src="/icons/cabocil-logo-clear.png" alt="fallback" /></AvatarFallback>
           </Avatar>
         </div>
         <span className="text-xs font-semibold text-center text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 line-clamp-2 max-w-[100px]">

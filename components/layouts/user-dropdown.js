@@ -19,7 +19,7 @@ export default function UserDropdown({ userData }) {
         <div className="flex items-center gap-2 cursor-pointer rounded-full">
           <Avatar className="h-7 w-7 border border-primary hover:border-accent">
             <AvatarImage src={userData.photo_url} alt={userData.name} />
-            <AvatarFallback className=""><img src="/images/cookie_kid_logo_circle.png" /></AvatarFallback>
+            <AvatarFallback className=""><img src="/icons/cabocil-logo-clear.png" /></AvatarFallback>
           </Avatar>
           {/* <span className="text-xs">{userData.name}</span> */}
         </div>
@@ -34,7 +34,7 @@ export default function UserDropdown({ userData }) {
           <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
             <Avatar className="h-8 w-8 rounded-lg">
               <AvatarImage src={userData.photo_url} alt={userData.name} />
-              <AvatarFallback className="rounded-lg"><img src="/images/cookie_kid_logo_circle.png" /></AvatarFallback>
+              <AvatarFallback className="rounded-lg"><img src="/icons/cabocil-logo-clear.png" /></AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-semibold">{userData.name}</span>

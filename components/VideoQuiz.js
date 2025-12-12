@@ -22,8 +22,8 @@ export default function VideoQuiz({
 
   useEffect(() => {
     currenstAnswerCount = 0
-    setAllowDismiss(localStorage.getItem("COOKIEKID:QUIZ:ALLOW_DISMISS") !== "off")
-  },[])
+    setAllowDismiss(localStorage.getItem("CABOCIL:QUIZ:ALLOW_DISMISS") !== "off")
+  }, [])
 
   useEffect(() => {
     currenstAnswerCount = 0
@@ -47,9 +47,9 @@ export default function VideoQuiz({
 
     Utils.SpeakText(activeQuizzes[quizCurrIndex].answers[idx].value)
 
-    if (localStorage.getItem("COOKIEKID:QUIZ:SHOW_ANSWER") !== "off") {
-      if (`${e.target.textContent}` === `${idx+1}`) {
-        e.target.textContent = `${idx+1}.`
+    if (localStorage.getItem("CABOCIL:QUIZ:SHOW_ANSWER") !== "off") {
+      if (`${e.target.textContent}` === `${idx + 1}`) {
+        e.target.textContent = `${idx + 1}.`
       } else if (e.target.textContent.includes(".")) {
         e.target.textContent = activeQuizzes[quizCurrIndex].answers[idx].value
       }
@@ -63,7 +63,7 @@ export default function VideoQuiz({
     if (tmpActiveQuiz.question_type === "match_word_and_voice") {
       if (!tmpActiveQuiz.answers[selectedAnswerIdx]) { return }
 
-      if (localStorage.getItem("COOKIEKID:QUIZ:CHANGE_QUESTION_ON_WRONG") !== "off") {
+      if (localStorage.getItem("CABOCIL:QUIZ:CHANGE_QUESTION_ON_WRONG") !== "off") {
         if (currenstAnswerCount >= MAX_WRONG_COUNT) {
           Utils.SpeakText("KAMU HARUS MENGULANG!")
           setTs(Date.now())
@@ -75,12 +75,12 @@ export default function VideoQuiz({
         Utils.SpeakText("JAWABANMU BENAR!")
         currenstAnswerCount = 0
 
-        if (quizCurrIndex == activeQuizzes.length-1) {
+        if (quizCurrIndex == activeQuizzes.length - 1) {
           setShow(false)
           setPlayerPlaying(true)
         }
 
-        setQuizCurrIndex(quizCurrIndex+1)
+        setQuizCurrIndex(quizCurrIndex + 1)
       } else {
         Utils.SpeakText("JAWABANMU SALAH!")
         currenstAnswerCount += 1
@@ -99,7 +99,7 @@ export default function VideoQuiz({
               {allowDismiss &&
                 <div className='flex gap-2'>
                   <Link href="/setting"><Button variant="outline"><SettingsIcon /></Button></Link>
-                  <Button onClick={()=>{setShow(false)}} variant="outline"><XIcon /></Button>
+                  <Button onClick={() => { setShow(false) }} variant="outline"><XIcon /></Button>
                 </div>
               }
             </div>
@@ -109,27 +109,27 @@ export default function VideoQuiz({
               {activeQuizzes[quizCurrIndex]?.question_message}
             </div>
             <div id="box_question" className='flex justify-center text-lg mt-28'>
-              <span className='text-[110px] ' style={{fontFamily: "'Muli', sans-serif"}}>
+              <span className='text-[110px] ' style={{ fontFamily: "'Muli', sans-serif" }}>
                 {activeQuizzes[quizCurrIndex]?.question.value}
               </span>
             </div>
             <div id="box_answer" className='grid grid-cols-2 mt-20 p-3 gap-4'>
-              {activeQuizzes[quizCurrIndex]?.answers.map((v, idx)=>(
+              {activeQuizzes[quizCurrIndex]?.answers.map((v, idx) => (
                 <Button
                   variant={`${selectedAnswerIdx == idx ? "default" : "outline"}`}
-                  onClick={(e)=>{answerClick(e, idx)}}
+                  onClick={(e) => { answerClick(e, idx) }}
                   key={`${idx}-${v.value}`}
-                  style={{fontFamily: "'Muli', sans-serif"}}
+                  style={{ fontFamily: "'Muli', sans-serif" }}
                 >
-                  {idx+1}
+                  {idx + 1}
                 </Button>
               ))}
             </div>
             <div id="box_submit" className='flex justify-between items-center p-3'>
               <div className='text-lg'>
-                Pertanyaan <span className='font-bold'>{quizCurrIndex+1}</span> Dari {activeQuizzes.length}
+                Pertanyaan <span className='font-bold'>{quizCurrIndex + 1}</span> Dari {activeQuizzes.length}
               </div>
-              <Button onClick={()=>submitAnswer()}>
+              <Button onClick={() => submitAnswer()}>
                 JAWAB
               </Button>
             </div>

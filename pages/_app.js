@@ -29,18 +29,18 @@ export default function App({ Component, pageProps }) {
 
         <meta itemProp="name" content="CaBocil" />
         <meta itemProp="description" content="Aplikasi untuk anak" />
-        <meta itemProp="image" content="https://cabocil.com/images/cookie_kid_logo_circle.png" />
+        <meta itemProp="image" content="https://cabocil.com/icons/cabocil-logo-clear.png" />
 
         <meta name="og:url" content="https://cabocil.com/" />
         <meta name="og:type" content="website" />
         <meta name="og:title" content="CaBocil" />
         <meta name="og:description" content="Aplikasi untuk anak" />
-        <meta name="og:image" content="https://cabocil.com/images/cookie_kid_logo_circle.png" />
+        <meta name="og:image" content="https://cabocil.com/icons/cabocil-logo-clear.png" />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="CaBocil" />
         <meta name="twitter:description" content="Aplikasi untuk anak" />
-        <meta name="twitter:image" content="https://cabocil.com/images/cookie_kid_logo_circle.png" />
+        <meta name="twitter:image" content="https://cabocil.com/icons/cabocil-logo-clear.png" />
       </Head>
 
       <CookiesProvider defaultSetOptions={{ path: '/' }} />

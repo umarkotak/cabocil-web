@@ -104,7 +104,7 @@ export default function VideoCard({
             <Avatar>
               <AvatarImage src={creatorImageUrl} />
               <AvatarFallback>
-                <img src="/images/cookie_kid_logo_circle.png" />
+                <img src="/icons/cabocil-logo-clear.png" />
               </AvatarFallback>
             </Avatar>
           </Link>

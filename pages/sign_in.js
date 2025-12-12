@@ -49,7 +49,7 @@ export default function SignIn() {
     <div className="flex flex-col items-center gap-6 p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
         <Link href="/" className="flex items-center self-center font-medium">
-          <img src="/images/cookie_kid_logo_circle.png" className="h-16 w-16" />
+          <img src="/icons/cabocil-logo-clear.png" className="h-16 w-16" />
           CaBocil
         </Link>
 

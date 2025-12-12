@@ -11,7 +11,7 @@ export default class YtVideo {
     this.channel_id = ytVideo.channel_id
 
     this.shorted_video_title = this.ShortVideoTitle(ytVideo.video_title)
-    this.video_stat_key = `COOKIEKID:VIDEO_STAT:${ytVideo.video_id}`
+    this.video_stat_key = `CABOCIL:VIDEO_STAT:${ytVideo.video_id}`
   }
 
   ShortVideoTitle(title) {
@@ -22,7 +22,7 @@ export default class YtVideo {
   }
 
   IncreaseWatchDuration(videoID, durationSecond) {
-    var key = `COOKIEKID:VIDEO_STAT:${videoID}`
+    var key = `CABOCIL:VIDEO_STAT:${videoID}`
     var videoStat = this.GetLocalVideoStat(key)
     videoStat.total_watch_duration += durationSecond
     localStorage.setItem(key, JSON.stringify(videoStat))
@@ -31,7 +31,7 @@ export default class YtVideo {
   }
 
   IncreaseViewCount(videoID) {
-    var key = `COOKIEKID:VIDEO_STAT:${videoID}`
+    var key = `CABOCIL:VIDEO_STAT:${videoID}`
     var videoStat = this.GetLocalVideoStat(key)
     videoStat.view_count += 1
     localStorage.setItem(key, JSON.stringify(videoStat))
@@ -46,7 +46,7 @@ export default class YtVideo {
       "latest_watched_at_unix": 0
     }
 
-    if (typeof(localStorage) === "undefined") {return {}}
+    if (typeof (localStorage) === "undefined") { return {} }
 
     if (localStorage.getItem(key)) {
       videoStat = JSON.parse(localStorage.getItem(key))
@@ -58,7 +58,7 @@ export default class YtVideo {
   }
 
   IncreaseDailyWatchDuration(currentDate, durationSecond) {
-    var key = `COOKIEKID:DAILY_VIDEO_STAT:${currentDate}`
+    var key = `CABOCIL:DAILY_VIDEO_STAT:${currentDate}`
     var videoStat = this.GetDailyLocalVideoStat(key)
 
     videoStat.total_watch_duration += durationSecond
@@ -66,7 +66,7 @@ export default class YtVideo {
   }
 
   IncreaseDailyViewCount(currentDate) {
-    var key = `COOKIEKID:DAILY_VIDEO_STAT:${currentDate}`
+    var key = `CABOCIL:DAILY_VIDEO_STAT:${currentDate}`
     var videoStat = this.GetDailyLocalVideoStat(key)
 
     videoStat.view_count += 1
@@ -80,7 +80,7 @@ export default class YtVideo {
       "latest_watched_at_unix": 0
     }
 
-    if (typeof(localStorage) === "undefined") {return {}}
+    if (typeof (localStorage) === "undefined") { return {} }
 
     if (localStorage.getItem(key)) {
       videoStat = JSON.parse(localStorage.getItem(key))
@@ -92,7 +92,7 @@ export default class YtVideo {
   }
 
   GetCurrentDailyLocalVideoStat() {
-    var key = `COOKIEKID:DAILY_VIDEO_STAT:${this.GetCurrentDate()}`
+    var key = `CABOCIL:DAILY_VIDEO_STAT:${this.GetCurrentDate()}`
 
     var videoStat = {
       "total_watch_duration": 0,
@@ -100,7 +100,7 @@ export default class YtVideo {
       "latest_watched_at_unix": 0
     }
 
-    if (typeof(localStorage) === "undefined") {return {}}
+    if (typeof (localStorage) === "undefined") { return {} }
 
     if (localStorage.getItem(key)) {
       videoStat = JSON.parse(localStorage.getItem(key))
@@ -117,9 +117,9 @@ export default class YtVideo {
       selectedVideoID = videoID
     }
 
-    if (typeof(localStorage) === "undefined") { return 0 }
+    if (typeof (localStorage) === "undefined") { return 0 }
 
-    var key = `COOKIEKID:VIDEO_STAT:${selectedVideoID}`
+    var key = `CABOCIL:VIDEO_STAT:${selectedVideoID}`
     if (!localStorage.getItem(key)) { return 0 }
     var videoStat = JSON.parse(localStorage.getItem(key))
     return videoStat.view_count
@@ -131,16 +131,16 @@ export default class YtVideo {
       selectedVideoID = videoID
     }
 
-    if (typeof(localStorage) === "undefined") { return 0 }
+    if (typeof (localStorage) === "undefined") { return 0 }
 
-    var key = `COOKIEKID:VIDEO_STAT:${selectedVideoID}`
+    var key = `CABOCIL:VIDEO_STAT:${selectedVideoID}`
     if (!localStorage.getItem(key)) { return 0 }
     var videoStat = JSON.parse(localStorage.getItem(key))
-    return Math.floor(videoStat.total_watch_duration/60)
+    return Math.floor(videoStat.total_watch_duration / 60)
   }
 
   PushToDailyWatchHistory(videoID) {
-    var dailyWatchHistoryKey = `COOKIEKID:DAILY_VIDEO_HISTORY:${this.GetCurrentDate()}`
+    var dailyWatchHistoryKey = `CABOCIL:DAILY_VIDEO_HISTORY:${this.GetCurrentDate()}`
 
     var dailyWatchHistories = []
 
@@ -148,7 +148,7 @@ export default class YtVideo {
       dailyWatchHistories = JSON.parse(localStorage.getItem(dailyWatchHistoryKey))
     }
 
-    dailyWatchHistories = dailyWatchHistories.filter(function( obj ) {
+    dailyWatchHistories = dailyWatchHistories.filter(function (obj) {
       return obj.video_id !== videoID
     })
 
@@ -163,6 +163,6 @@ export default class YtVideo {
 
   GetCurrentDate() {
     var d = new Date()
-    return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`
+    return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
   }
 }

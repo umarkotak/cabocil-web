@@ -22,7 +22,7 @@ const items = [
   { key: "item-workbook", title: "Lembar Kerja", url: "/workbooks", icon: Pencil },
   { key: "item-game", title: "Permainan", url: "/games", icon: Gamepad2 },
   { key: "item-subscription", title: "Langganan", url: "/subscription", icon: ReceiptText },
-  { key: "item-support", title: "Support CaBocil", url: "https://trakteer.id/marumaru", icon: HandCoins },
+  // { key: "item-support", title: "Support CaBocil", url: "https://trakteer.id/marumaru", icon: HandCoins },
 ]
 
 const adminItems = [
@@ -31,7 +31,7 @@ const adminItems = [
   { key: "admin-item-2", title: "Channels", url: "/admin/channels", icon: TvIcon },
 ]
 
-export function AppSidebar({userData, isAdmin}) {
+export function AppSidebar({ userData, isAdmin }) {
   const pathName = usePathname()
   const { state, open, setOpen, openMobile, setOpenMobile, isMobile, toggleSidebar } = useSidebar()
 
@@ -56,7 +56,7 @@ export function AppSidebar({userData, isAdmin}) {
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <img src="/images/cookie_kid_logo_circle.png" />
+                  <img src="/icons/cabocil-logo-clear.png" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">
@@ -73,7 +73,7 @@ export function AppSidebar({userData, isAdmin}) {
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
-            <SidebarMenuItem onClick={()=>handleClickSidebarItem()}>
+            <SidebarMenuItem onClick={() => handleClickSidebarItem()}>
               <SidebarMenuButton asChild isActive={`${pathName}`.startsWith("/home")}>
                 <Link href="/home">
                   <Home />
@@ -81,7 +81,7 @@ export function AppSidebar({userData, isAdmin}) {
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-            <SidebarMenuItem onClick={()=>handleClickSidebarItem()}>
+            <SidebarMenuItem onClick={() => handleClickSidebarItem()}>
               <SidebarMenuButton asChild isActive={`${pathName}`.startsWith("/activity")}>
                 <Link href="/activity">
                   <GalleryHorizontalEnd />
@@ -91,13 +91,12 @@ export function AppSidebar({userData, isAdmin}) {
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
-        <SidebarSeparator />
         <SidebarGroup>
           <SidebarGroupLabel>Menu</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
-                <SidebarMenuItem key={item.key} onClick={()=>handleClickSidebarItem()}>
+                <SidebarMenuItem key={item.key} onClick={() => handleClickSidebarItem()}>
                   <SidebarMenuButton asChild isActive={`${pathName}`.startsWith(item.url)}>
                     <Link href={item.url}>
                       <item.icon />
@@ -118,7 +117,7 @@ export function AppSidebar({userData, isAdmin}) {
             <SidebarGroupContent>
               <SidebarMenu>
                 {adminItems.map((item) => (
-                  <SidebarMenuItem key={item.key} onClick={()=>handleClickSidebarItem()}>
+                  <SidebarMenuItem key={item.key} onClick={() => handleClickSidebarItem()}>
                     <SidebarMenuButton asChild isActive={`${pathName}` === item.url}>
                       <Link href={item.url}>
                         <item.icon />

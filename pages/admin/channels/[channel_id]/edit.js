@@ -98,7 +98,7 @@ export default function AdminChannelEdit() {
           <CardTitle className="flex items-center justify-start gap-4">
             <Avatar className="h-20 w-20">
               <AvatarImage src={channelDetail.image_url} />
-              <AvatarFallback><img src="/images/cookie_kid_logo_circle.png" /></AvatarFallback>
+              <AvatarFallback><img src="/icons/cabocil-logo-clear.png" /></AvatarFallback>
             </Avatar>
             <div className='flex flex-col'>
               <span className='text-2xl'>{channelDetail.name}</span>
@@ -141,7 +141,7 @@ export default function AdminChannelEdit() {
             </div>
           </div>
           <div className='flex justify-end'>
-            <Button onClick={()=>SubmitUpdate()}>
+            <Button onClick={() => SubmitUpdate()}>
               <SaveIcon />
               Save
             </Button>

@@ -106,7 +106,7 @@ export default function Channel() {
           <CardTitle className="flex items-center justify-start gap-4">
             <Avatar className="h-20 w-20">
               <AvatarImage src={channelDetail.image_url} />
-              <AvatarFallback><img src="/images/cookie_kid_logo_circle.png" /></AvatarFallback>
+              <AvatarFallback><img src="/icons/cabocil-logo-clear.png" /></AvatarFallback>
             </Avatar>
             <span className='text-xl'>{channelDetail.name}</span>
           </CardTitle>

@@ -33,19 +33,19 @@ export default function Channels() {
   }
 
   function initializeBlacklistChannelMap() {
-    if (!localStorage.getItem(`COOKIEKID:BLACKLIST_CHANNEL_MAP`)) {
-      localStorage.setItem(`COOKIEKID:BLACKLIST_CHANNEL_MAP`, '{}')
+    if (!localStorage.getItem(`CABOCIL:BLACKLIST_CHANNEL_MAP`)) {
+      localStorage.setItem(`CABOCIL:BLACKLIST_CHANNEL_MAP`, '{}')
     }
-    var tmpBlacklistChannelMap = JSON.parse(localStorage.getItem(`COOKIEKID:BLACKLIST_CHANNEL_MAP`))
+    var tmpBlacklistChannelMap = JSON.parse(localStorage.getItem(`CABOCIL:BLACKLIST_CHANNEL_MAP`))
     setBlacklistChannelMap(tmpBlacklistChannelMap)
   }
 
   function handleCheckChange(e, channelID) {
-    if (!localStorage.getItem(`COOKIEKID:BLACKLIST_CHANNEL_MAP`)) {
-      localStorage.setItem(`COOKIEKID:BLACKLIST_CHANNEL_MAP`, '{}')
+    if (!localStorage.getItem(`CABOCIL:BLACKLIST_CHANNEL_MAP`)) {
+      localStorage.setItem(`CABOCIL:BLACKLIST_CHANNEL_MAP`, '{}')
     }
 
-    var tmpBlacklistChannelMap = JSON.parse(localStorage.getItem(`COOKIEKID:BLACKLIST_CHANNEL_MAP`))
+    var tmpBlacklistChannelMap = JSON.parse(localStorage.getItem(`CABOCIL:BLACKLIST_CHANNEL_MAP`))
 
     if (tmpBlacklistChannelMap[channelID]) {
       tmpBlacklistChannelMap[channelID] = false
@@ -53,12 +53,12 @@ export default function Channels() {
       tmpBlacklistChannelMap[channelID] = true
     }
 
-    localStorage.setItem(`COOKIEKID:BLACKLIST_CHANNEL_MAP`, JSON.stringify(tmpBlacklistChannelMap))
+    localStorage.setItem(`CABOCIL:BLACKLIST_CHANNEL_MAP`, JSON.stringify(tmpBlacklistChannelMap))
     setBlacklistChannelMap(tmpBlacklistChannelMap)
   }
 
   function checkAll() {
-    localStorage.setItem(`COOKIEKID:BLACKLIST_CHANNEL_MAP`, '{}')
+    localStorage.setItem(`CABOCIL:BLACKLIST_CHANNEL_MAP`, '{}')
     setBlacklistChannelMap({})
   }
 
@@ -67,7 +67,7 @@ export default function Channels() {
     channelList.forEach((oneChannel) => {
       tmpBlacklistChannelMap[oneChannel.id] = true
     })
-    localStorage.setItem(`COOKIEKID:BLACKLIST_CHANNEL_MAP`, JSON.stringify(tmpBlacklistChannelMap))
+    localStorage.setItem(`CABOCIL:BLACKLIST_CHANNEL_MAP`, JSON.stringify(tmpBlacklistChannelMap))
     setBlacklistChannelMap(tmpBlacklistChannelMap)
   }
 
@@ -79,8 +79,8 @@ export default function Channels() {
           <small>kamu dapat memilih channel mana yang akan muncul pada rekomendasi mu</small>
         </div>
         <div className='flex gap-2'>
-          <Button onClick={()=>checkAll()}>Check All</Button>
-          <Button onClick={()=>unCheckAll()}>Uncheck All</Button>
+          <Button onClick={() => checkAll()}>Check All</Button>
+          <Button onClick={() => unCheckAll()}>Uncheck All</Button>
         </div>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-x-5 gap-y-8">
@@ -89,8 +89,8 @@ export default function Channels() {
             <Link href={`/channels/${oneChannel.id}`} className='group'>
               <div className='flex items-center gap-3'>
                 <Avatar className="h-14 w-14 group-hover:scale-105">
-                  <AvatarImage src={oneChannel.image_url}/>
-                  <AvatarFallback><img src="/images/cookie_kid_logo_circle.png" /></AvatarFallback>
+                  <AvatarImage src={oneChannel.image_url} />
+                  <AvatarFallback><img src="/icons/cabocil-logo-clear.png" /></AvatarFallback>
                 </Avatar>
                 <span className='group-hover:text-amber-600'>{oneChannel.name}</span>
                 <small className="">{oneChannel.string_tags}</small>

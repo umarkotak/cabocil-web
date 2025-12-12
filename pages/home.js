@@ -28,17 +28,17 @@ export default function Home() {
     <div className="w-full min-h-screen bg-slate-50 dark:bg-slate-950/50">
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Helper Hero Section */}
-        <div className="relative mb-12 p-8 rounded-3xl bg-gradient-to-r from-violet-600 to-indigo-600 overflow-hidden shadow-2xl">
+        <div className="relative mb-12 p-8 rounded-3xl bg-[url('/icons/cabocil-cover-light-min.png')] bg-cover bg-center bg-no-repeat dark:bg-[url('/icons/cabocil-cover-night-min.png')] overflow-hidden shadow-2xl">
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="text-white space-y-2 text-center md:text-left">
-              <div className="flex items-center justify-center md:justify-start gap-2 text-indigo-200 uppercase tracking-wider text-sm font-bold">
+            <div className="space-y-2 text-center md:text-left">
+              <div className="flex items-center justify-center md:justify-start gap-2 uppercase tracking-wider text-sm font-bold">
                 <Sparkles size={16} />
                 <span>Selamat Datang</span>
               </div>
               <h1 className="text-3xl md:text-5xl font-black tracking-tight">
                 Halo, Petualang Kecil! 👋
               </h1>
-              <p className="text-indigo-100 text-lg max-w-md">
+              <p className="text-lg max-w-md">
                 Siap untuk belajar dan bermain hari ini? Ayo pilih kegiatan favoritmu!
               </p>
             </div>
@@ -55,7 +55,7 @@ export default function Home() {
 
         {/* Menu Cards */}
         <div className='mb-16'>
-          <div className='flex justify-between items-center mb-6'>
+          <div className='flex flex-col md:flex-row justify-between items-center mb-6'>
             <div className='flex items-center gap-3'>
               <div className="p-2 rounded-xl bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400">
                 <Star size={24} />
