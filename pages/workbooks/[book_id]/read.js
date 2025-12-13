@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from "react"
+import { useEffect, useState, useCallback, useMemo, memo } from "react"
 import { useRouter } from "next/router"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
@@ -16,6 +16,65 @@ import cabocilAPI from "@/apis/cabocil_api"
 import ImageDrawer from "@/components/ImageDrawer"
 import { LoadingSpinner } from "@/components/ui/spinner"
 import { toast } from "react-toastify"
+
+// Memoized thumbnail component to prevent unnecessary re-renders
+const PageThumbnail = memo(function PageThumbnail({
+  page,
+  index,
+  isActive,
+  isSelected,
+  canAction,
+  onToggleSelection,
+  onGoToPage,
+}) {
+  const [imageLoaded, setImageLoaded] = useState(false)
+
+  return (
+    <div
+      className={`relative rounded-lg overflow-hidden ${isActive ? "ring-2 ring-blue-500 ring-offset-2" : ""
+        } ${isSelected ? "ring-2 ring-red-500 ring-offset-2" : ""}`}
+      style={{ containIntrinsicSize: "auto 150px", contentVisibility: "auto" }}
+    >
+      {/* Checkbox */}
+      {canAction && (
+        <div className="absolute top-2 left-2 z-10">
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={() => onToggleSelection(page.id)}
+            className="w-4 h-4 text-red-600 bg-white border-2 border-gray-300 rounded focus:ring-red-500 focus:ring-2"
+            aria-label={`Select page ${page.page_number}`}
+          />
+        </div>
+      )}
+
+      {/* Preview with skeleton */}
+      <div
+        className="aspect-3/4 overflow-hidden rounded-lg bg-gray-200 cursor-pointer"
+        onClick={() => onGoToPage(index + 1)}
+      >
+        {!imageLoaded && (
+          <div className="w-full h-full animate-pulse bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200" />
+        )}
+        <img
+          src={page.thumbnail_url}
+          alt={`Page ${page.page_number}`}
+          className={`w-full h-full object-cover transition-opacity duration-200 ${imageLoaded ? "opacity-100" : "opacity-0"
+            }`}
+          loading="lazy"
+          decoding="async"
+          onLoad={() => setImageLoaded(true)}
+        />
+      </div>
+
+      {/* Page number */}
+      <div className="absolute bottom-1 right-1 bg-black/70 text-white text-xs px-2 py-1 rounded pointer-events-none">
+        {canAction && `id: ${page.id}, `}
+        {page.page_number}
+      </div>
+    </div>
+  )
+})
 
 // Custom hooks
 const useBookDetail = (bookId) => {
@@ -430,67 +489,19 @@ export default function Read() {
           </div>
         )}
 
-        <div className="p-4 h-[calc(100vh-90px)] overflow-y-auto pb-20">
+        <div className="p-4 h-[calc(100vh-90px)] overflow-y-auto pb-20" style={{ scrollBehavior: "auto" }}>
           <div className="grid grid-cols-2 gap-3">
             {visibleItems.map((page, index) => (
-              <div
+              <PageThumbnail
                 key={`drawer-page-${page.id}`}
-                className={`relative group transition-all duration-200 ${activePageNumber === index + 1 ? "ring-2 ring-blue-500 ring-offset-2" : ""
-                  } ${bookDetail?.can_action && selectedPageIds.includes(page.id)
-                    ? "ring-2 ring-red-500 ring-offset-2"
-                    : ""
-                  }`}
-              >
-                {/* Checkbox */}
-                {bookDetail?.can_action && (
-                  <div className="absolute top-2 left-2 z-10">
-                    <input
-                      type="checkbox"
-                      checked={selectedPageIds.includes(page.id)}
-                      onChange={() => togglePageSelection(page.id)}
-                      className="w-4 h-4 text-red-600 bg-white border-2 border-gray-300 rounded focus:ring-red-500 focus:ring-2"
-                      aria-label={`Select page ${page.page_number}`}
-                    />
-                  </div>
-                )}
-
-                {/* Preview */}
-                <div className="aspect-3/4 overflow-hidden rounded-lg bg-gray-100">
-                  <img
-                    src={page.image_file_url}
-                    alt={`Page ${page.page_number}`}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                </div>
-
-                {/* Page number */}
-                <div className="absolute bottom-1 right-1 bg-black/70 text-white text-xs px-2 py-1 rounded">
-                  {bookDetail?.can_action && `id: ${page.id}, `}
-                  {page.page_number}
-                </div>
-
-                {/* Active indicator */}
-                {/* {activePageNumber === index + 1 && (
-                  <div className="absolute top-1 right-1 bg-primary text-white text-xs px-2 py-1 rounded">
-                    <EyeIcon size={14} />
-                  </div>
-                )} */}
-
-                {/* Selection overlay */}
-                {/* {bookDetail?.can_action && selectedPageIds.includes(page.id) && (
-                  <div className="absolute inset-0 bg-red-500 bg-opacity-20 rounded-lg border-2 border-red-500" />
-                )} */}
-
-                {/* Hover overlay */}
-                <div
-                  className="absolute inset-0 bg-blue-500/0 group-hover:bg-blue-500/30 rounded-lg cursor-pointer"
-                  onClick={() => goToPage(index + 1)}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`Go to page ${page.page_number}`}
-                />
-              </div>
+                page={page}
+                index={index}
+                isActive={activePageNumber === index + 1}
+                isSelected={bookDetail?.can_action && selectedPageIds.includes(page.id)}
+                canAction={bookDetail?.can_action}
+                onToggleSelection={togglePageSelection}
+                onGoToPage={goToPage}
+              />
             ))}
           </div>
         </div>
