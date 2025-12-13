@@ -117,6 +117,10 @@ class CabocilAPI {
     return this.Patch(`/ytkidd/api/youtube_channel/${params.id}`, authToken, h, params)
   }
 
+  async PatchUpdateYoutubeChannelActive(authToken, h, params) {
+    return this.Patch(`/ytkidd/api/youtube_channel/${params.id}/active`, authToken, h, params)
+  }
+
   async DeleteYoutubeChannel(authToken, h, params) {
     return this.Delete(`/ytkidd/api/youtube_channel/${params.id}`, authToken, h, params)
   }

@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { PlusIcon, RefreshCcw, Trash } from 'lucide-react'
 import { Checkbox } from '@/components/ui/checkbox'
+import Utils from '@/models/Utils'
 import { toast } from 'react-toastify'
 
 export default function Channels() {
@@ -39,7 +40,7 @@ export default function Channels() {
         "channel_id": oneChannel.external_id,
         "page_token": "",
         "query": "",
-        "max_page": 20,
+        "max_page": 5,
         "break_on_exists": breakOnExists
       }
 
@@ -61,10 +62,6 @@ export default function Channels() {
 
   async function DeleteChannel(oneChannel) {
     try {
-      if (!confirm("are you sure want to delete this channel?")) {
-        return
-      }
-
       const response = await cabocilAPI.DeleteYoutubeChannel("", {}, {
         id: oneChannel.id,
       })
@@ -77,7 +74,6 @@ export default function Channels() {
       }
 
       toast.success(`Success delete ${oneChannel.name}`)
-      GetChannelList(channelParams)
 
     } catch (e) {
       console.error(e)
@@ -131,13 +127,13 @@ export default function Channels() {
   }
 
   async function bulkDelete() {
-    const selected = channelList.filter(ch => selectedChannels.has(ch.id))
-    if (selected.length === 0) {
-      toast.error('No channels selected')
+    if (!confirm("are you sure want to delete these channels?")) {
       return
     }
 
-    if (!confirm(`Are you sure you want to delete ${selected.length} channels?`)) {
+    const selected = channelList.filter(ch => selectedChannels.has(ch.id))
+    if (selected.length === 0) {
+      toast.error('No channels selected')
       return
     }
 
@@ -145,6 +141,37 @@ export default function Channels() {
       await DeleteChannel(channel)
     }
     setSelectedChannels(new Set())
+    GetChannelList(channelParams)
+  }
+
+  async function bulkUpdateActive(active) {
+    const selected = channelList.filter(ch => selectedChannels.has(ch.id))
+    if (selected.length === 0) {
+      toast.error('No channels selected')
+      return
+    }
+
+    for (const channel of selected) {
+      try {
+        const response = await cabocilAPI.PatchUpdateYoutubeChannelActive("", {}, {
+          id: channel.id,
+          active: active,
+        })
+
+        const body = await response.json()
+
+        if (response.status !== 200) {
+          toast.error(`Error updating youtube channel: ${body.data}`)
+          return
+        }
+
+        toast.success(`Success update ${channel.name}`)
+
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    GetChannelList(channelParams)
   }
 
   return (
@@ -183,9 +210,10 @@ export default function Channels() {
                       <AvatarImage src={oneChannel.image_url} />
                       <AvatarFallback><img src="/icons/cabocil-logo-clear.png" /></AvatarFallback>
                     </Avatar>
-                    <div className="flex-1">
-                      <div className='group-hover:text-amber-600 text-sm line-clamp-2'>{oneChannel.name}</div>
-                      <small className="text-muted-foreground">{oneChannel.string_tags}</small>
+                    <div className="flex-1 flex-col">
+                      <div className='group-hover:text-amber-600 text-sm line-clamp-2'>{oneChannel.active ? '🟢' : '🔴'} {oneChannel.name}</div>
+                      <small className="text-xs text-muted-foreground">{oneChannel.string_tags}</small>
+                      <small className="flex items-center gap-1 text-xs text-muted-foreground break-all"><RefreshCcw size={12} /> {Utils.GetTimeElapsed(oneChannel.updated_at)}</small>
                     </div>
                   </div>
                 </Link>
@@ -232,6 +260,22 @@ export default function Channels() {
                   >
                     <Trash size={16} className="mr-2" />
                     Delete
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => bulkUpdateActive(true)}
+                    className="w-full justify-start"
+                  >
+                    🟢 Active
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => bulkUpdateActive(false)}
+                    className="w-full justify-start"
+                  >
+                    🔴 Inactive
                   </Button>
                 </div>
               </div>

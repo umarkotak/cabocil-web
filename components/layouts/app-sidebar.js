@@ -1,4 +1,4 @@
-import { Book, GalleryHorizontalEnd, Gamepad2, HandCoins, Home, ImageIcon, Joystick, LayoutDashboard, Pencil, ReceiptText, Tv, TvIcon, UserCheck } from "lucide-react"
+import { Book, Contact, GalleryHorizontalEnd, Gamepad2, HandCoins, Home, ImageIcon, Instagram, Joystick, LayoutDashboard, Pencil, ReceiptText, Tv, TvIcon, UserCheck } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -21,6 +21,7 @@ const items = [
   { key: "item-workbook", title: "Lembar Kerja", url: "/workbooks", icon: Pencil },
   { key: "item-game", title: "Permainan", url: "/games", icon: Gamepad2 },
   { key: "item-subscription", title: "Langganan", url: "/subscription", icon: ReceiptText },
+  { key: "item-contact", title: "Hubungi Kami", url: "/contact", icon: Contact },
   // { key: "item-support", title: "Support CaBocil", url: "https://trakteer.id/marumaru", icon: HandCoins },
 ]
 

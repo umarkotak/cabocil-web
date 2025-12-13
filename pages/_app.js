@@ -41,6 +41,8 @@ export default function App({ Component, pageProps }) {
         <meta name="twitter:title" content="CaBocil" />
         <meta name="twitter:description" content="Aplikasi untuk anak" />
         <meta name="twitter:image" content="https://cabocil.com/icons/cabocil-logo-clear.png" />
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6813236705463574" crossorigin="anonymous" />
       </Head>
 
       <CookiesProvider defaultSetOptions={{ path: '/' }} />

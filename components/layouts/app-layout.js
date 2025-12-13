@@ -105,8 +105,14 @@ export default function AppLayout({ children }) {
     router.reload()
   }
 
-  function BreadcrumbsButton() {
+  // ("str1,str2,str3,str4".match(/,/g) || []).length
+  function BreadcrumbsButton({ pathName }) {
     if (!pathName) { return null }
+
+    if ((pathName.match(/\//g) || []).length <= 1) {
+      // return <Button size="sm7" variant="outline" onClick={() => router.back()}><ChevronLeft size={8} /> back</Button>
+      return <Link href="/home"><Button size="sm7" variant="ghost"><ChevronLeft size={8} /> {pathName}</Button></Link>
+    }
 
     // back link
     if (pathName.startsWith("/watch")) {
@@ -136,11 +142,7 @@ export default function AppLayout({ children }) {
         <header className={`sticky top-0 flex justify-between shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-10 z-30 py-3 pb-2 px-3 bg-sidebar`}>
           <div className="flex items-center gap-2">
             {showSidebarTrigger && <SidebarTrigger />}
-            {/* <BreadcrumbsButton /> */}
-            {
-              hasMoreThanOneSlash(pathName) &&
-              <Button size="sm7" variant="outline" onClick={() => router.back()}><ChevronLeft size={8} /> back</Button>
-            }
+            <BreadcrumbsButton pathName={pathName} />
           </div>
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm7" onClick={() => window.location.reload()}>
