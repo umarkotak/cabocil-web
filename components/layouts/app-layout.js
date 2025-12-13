@@ -115,20 +115,20 @@ export default function AppLayout({ children }) {
     }
 
     // back link
-    if (pathName.startsWith("/watch")) {
-      return <Link href="/tv"><Button size="sm7" variant="outline"><ChevronLeft size={8} /> back</Button></Link>
+    if (pathName.startsWith("/watch") || pathName.startsWith("/channels")) {
+      return <Link href="/tv"><Button size="sm7" variant="ghost"><ChevronLeft size={8} /> /tv</Button></Link>
     }
 
     if (pathName.includes("/books") && pathName.includes("/read")) {
-      return <Link href="/books"><Button size="sm7" variant="outline"><ChevronLeft size={8} /> back</Button></Link>
+      return <Link href="/books"><Button size="sm7" variant="ghost"><ChevronLeft size={8} /> back</Button></Link>
     }
 
     if (pathName.includes("/workbooks") && pathName.includes("/read")) {
-      return <Link href="/workbooks"><Button size="sm7" variant="outline"><ChevronLeft size={8} /> back</Button></Link>
+      return <Link href="/workbooks"><Button size="sm7" variant="ghost"><ChevronLeft size={8} /> back</Button></Link>
     }
 
     if (pathName.includes("/games/")) {
-      return <Link href="/games"><Button size="sm7" variant="outline"><ChevronLeft size={8} /> back</Button></Link>
+      return <Link href="/games"><Button size="sm7" variant="ghost"><ChevronLeft size={8} /> back</Button></Link>
     }
 
     return <Link href={pathName}><Button size="sm7" variant="ghost">{pathName}</Button></Link>
