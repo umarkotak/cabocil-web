@@ -3,12 +3,14 @@ import { Pencil, Eraser, Undo, Redo, Trash2, ChevronDown } from 'lucide-react';
 import cabocilAPI from '@/apis/cabocil_api';
 import useDebounce from './useDebounce';
 
-// ========== Procreate-Style Color Picker Component ==========
+// ========== Compact Procreate-Style Color Picker Component ==========
 const ColorPickerDropdown = ({ color, onChange, recentColors, onColorUsed }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [hue, setHue] = useState(0);
   const [saturation, setSaturation] = useState(100);
   const [brightness, setBrightness] = useState(50);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+  const buttonRef = useRef(null);
   const dropdownRef = useRef(null);
   const colorWheelRef = useRef(null);
   const satBrightRef = useRef(null);
@@ -16,46 +18,33 @@ const ColorPickerDropdown = ({ color, onChange, recentColors, onColorUsed }) => 
   const [isDraggingSB, setIsDraggingSB] = useState(false);
 
   const defaultPalette = [
-    // Row 1 - Basic colors
     '#000000', '#404040', '#808080', '#c0c0c0', '#ffffff',
-    // Row 2 - Warm colors
     '#ff0000', '#ff4500', '#ff8c00', '#ffa500', '#ffd700',
-    // Row 3 - Nature colors
     '#ffff00', '#9acd32', '#32cd32', '#00fa9a', '#00ffff',
-    // Row 4 - Cool colors
     '#00bfff', '#4169e1', '#0000ff', '#8a2be2', '#9400d3',
-    // Row 5 - Accent colors
-    '#ff00ff', '#ff1493', '#ff69b4', '#db7093', '#bc8f8f',
   ];
 
-  // Convert HSL to Hex
   const hslToHex = (h, s, l) => {
-    s /= 100;
-    l /= 100;
+    s /= 100; l /= 100;
     const a = s * Math.min(l, 1 - l);
     const f = (n) => {
       const k = (n + h / 30) % 12;
-      const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-      return Math.round(255 * color).toString(16).padStart(2, '0');
+      const c = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+      return Math.round(255 * c).toString(16).padStart(2, '0');
     };
     return `#${f(0)}${f(8)}${f(4)}`;
   };
 
-  // Convert Hex to HSL
   const hexToHsl = (hex) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     if (!result) return { h: 0, s: 100, l: 50 };
-
     let r = parseInt(result[1], 16) / 255;
     let g = parseInt(result[2], 16) / 255;
     let b = parseInt(result[3], 16) / 255;
-
     const max = Math.max(r, g, b), min = Math.min(r, g, b);
     let h, s, l = (max + min) / 2;
-
-    if (max === min) {
-      h = s = 0;
-    } else {
+    if (max === min) { h = s = 0; }
+    else {
       const d = max - min;
       s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
       switch (max) {
@@ -64,24 +53,56 @@ const ColorPickerDropdown = ({ color, onChange, recentColors, onColorUsed }) => 
         case b: h = ((r - g) / d + 4) / 6; break;
       }
     }
-
     return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
   };
 
-  // Initialize HSL from current color when dropdown opens
+  // Calculate dropdown position when opening
+  const updateDropdownPosition = useCallback(() => {
+    if (buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      const dropdownWidth = 220;
+      const dropdownHeight = 320;
+      let left = rect.left;
+      let top = rect.bottom + 4;
+
+      // Ensure dropdown stays within viewport
+      if (left + dropdownWidth > window.innerWidth) {
+        left = window.innerWidth - dropdownWidth - 8;
+      }
+      if (top + dropdownHeight > window.innerHeight) {
+        top = rect.top - dropdownHeight - 4;
+      }
+
+      setDropdownPosition({ top, left });
+    }
+  }, []);
+
   useEffect(() => {
     if (isOpen && color) {
       const hsl = hexToHsl(color);
       setHue(hsl.h);
       setSaturation(hsl.s);
       setBrightness(hsl.l);
+      updateDropdownPosition();
     }
-  }, [isOpen, color]);
+  }, [isOpen, color, updateDropdownPosition]);
 
-  // Close dropdown when clicking outside
+  // Update position on scroll/resize
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleUpdate = () => updateDropdownPosition();
+    window.addEventListener('scroll', handleUpdate, true);
+    window.addEventListener('resize', handleUpdate);
+    return () => {
+      window.removeEventListener('scroll', handleUpdate, true);
+      window.removeEventListener('resize', handleUpdate);
+    };
+  }, [isOpen, updateDropdownPosition]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target) &&
+        buttonRef.current && !buttonRef.current.contains(event.target)) {
         setIsOpen(false);
       }
     };
@@ -89,70 +110,35 @@ const ColorPickerDropdown = ({ color, onChange, recentColors, onColorUsed }) => 
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Handle color wheel interaction
   const handleWheelInteraction = (e) => {
     const rect = colorWheelRef.current.getBoundingClientRect();
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
     const x = (e.clientX || e.touches?.[0]?.clientX) - rect.left - centerX;
     const y = (e.clientY || e.touches?.[0]?.clientY) - rect.top - centerY;
-
     let angle = Math.atan2(y, x) * (180 / Math.PI) + 90;
     if (angle < 0) angle += 360;
-
     setHue(Math.round(angle));
-    const newColor = hslToHex(Math.round(angle), saturation, brightness);
-    onChange(newColor);
+    onChange(hslToHex(Math.round(angle), saturation, brightness));
   };
 
-  // Handle saturation/brightness interaction
   const handleSBInteraction = (e) => {
     const rect = satBrightRef.current.getBoundingClientRect();
     const x = Math.max(0, Math.min(rect.width, (e.clientX || e.touches?.[0]?.clientX) - rect.left));
     const y = Math.max(0, Math.min(rect.height, (e.clientY || e.touches?.[0]?.clientY) - rect.top));
-
-    const newSaturation = Math.round((x / rect.width) * 100);
-    const newBrightness = Math.round(100 - (y / rect.height) * 100);
-
-    setSaturation(newSaturation);
-    setBrightness(newBrightness);
-    const newColor = hslToHex(hue, newSaturation, newBrightness);
-    onChange(newColor);
+    const newSat = Math.round((x / rect.width) * 100);
+    const newBright = Math.round(100 - (y / rect.height) * 100);
+    setSaturation(newSat);
+    setBrightness(newBright);
+    onChange(hslToHex(hue, newSat, newBright));
   };
 
-  // Mouse/Touch event handlers for wheel
-  const handleWheelMouseDown = (e) => {
-    e.preventDefault();
-    setIsDraggingWheel(true);
-    handleWheelInteraction(e);
-  };
-
-  const handleWheelMouseMove = (e) => {
-    if (isDraggingWheel) {
-      handleWheelInteraction(e);
-    }
-  };
-
-  const handleWheelMouseUp = () => {
-    setIsDraggingWheel(false);
-  };
-
-  // Mouse/Touch event handlers for saturation/brightness
-  const handleSBMouseDown = (e) => {
-    e.preventDefault();
-    setIsDraggingSB(true);
-    handleSBInteraction(e);
-  };
-
-  const handleSBMouseMove = (e) => {
-    if (isDraggingSB) {
-      handleSBInteraction(e);
-    }
-  };
-
-  const handleSBMouseUp = () => {
-    setIsDraggingSB(false);
-  };
+  const handleWheelMouseDown = (e) => { e.preventDefault(); setIsDraggingWheel(true); handleWheelInteraction(e); };
+  const handleWheelMouseMove = (e) => { if (isDraggingWheel) handleWheelInteraction(e); };
+  const handleWheelMouseUp = () => setIsDraggingWheel(false);
+  const handleSBMouseDown = (e) => { e.preventDefault(); setIsDraggingSB(true); handleSBInteraction(e); };
+  const handleSBMouseMove = (e) => { if (isDraggingSB) handleSBInteraction(e); };
+  const handleSBMouseUp = () => setIsDraggingSB(false);
 
   useEffect(() => {
     if (isDraggingWheel) {
@@ -167,7 +153,7 @@ const ColorPickerDropdown = ({ color, onChange, recentColors, onColorUsed }) => 
       document.removeEventListener('touchmove', handleWheelMouseMove);
       document.removeEventListener('touchend', handleWheelMouseUp);
     };
-  }, [isDraggingWheel, hue, saturation, brightness]);
+  }, [isDraggingWheel, saturation, brightness]);
 
   useEffect(() => {
     if (isDraggingSB) {
@@ -182,7 +168,7 @@ const ColorPickerDropdown = ({ color, onChange, recentColors, onColorUsed }) => 
       document.removeEventListener('touchmove', handleSBMouseMove);
       document.removeEventListener('touchend', handleSBMouseUp);
     };
-  }, [isDraggingSB, hue, saturation, brightness]);
+  }, [isDraggingSB, hue]);
 
   const selectColor = (selectedColor) => {
     onChange(selectedColor);
@@ -193,95 +179,40 @@ const ColorPickerDropdown = ({ color, onChange, recentColors, onColorUsed }) => 
     setBrightness(hsl.l);
   };
 
-  // Calculate hue indicator position on wheel
-  const wheelRadius = 60;
-  const indicatorRadius = wheelRadius - 12;
+  const wheelSize = 80;
+  const indicatorRadius = (wheelSize / 2) - 10;
   const hueRad = ((hue - 90) * Math.PI) / 180;
   const hueX = Math.cos(hueRad) * indicatorRadius;
   const hueY = Math.sin(hueRad) * indicatorRadius;
 
   return (
-    <div className="relative" ref={dropdownRef}>
-      {/* Color Picker Button */}
+    <div className="relative">
+      {/* Compact Color Picker Button */}
       <button
+        ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition-all w-full"
+        className="flex items-center gap-1.5 px-2 py-1.5 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 transition-all"
       >
         <div
-          className="w-6 h-6 rounded-md border-2 border-gray-300 shadow-inner"
+          className="w-5 h-5 rounded border border-gray-400"
           style={{ backgroundColor: color }}
         />
-        <span className="text-sm text-gray-700 flex-1 text-left truncate hidden lg:block">{color}</span>
-        <ChevronDown size={16} className={`text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown size={14} className={`text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
-      {/* Dropdown Panel */}
+      {/* Fixed Position Dropdown Panel */}
       {isOpen && (
-        <div className="absolute z-50 mt-2 bg-white rounded-xl shadow-2xl border border-gray-200 p-4 lg:w-72 w-64 left-0 lg:left-auto">
-          {/* Current Color Preview */}
-          <div className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-100">
+        <div
+          ref={dropdownRef}
+          className="fixed z-[9999] bg-white rounded-lg shadow-2xl border border-gray-200 p-3"
+          style={{ top: dropdownPosition.top, left: dropdownPosition.left, width: 220 }}
+        >
+          {/* Current Color + Hex Input Row */}
+          <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100">
             <div
-              className="w-12 h-12 rounded-lg shadow-inner border border-gray-200"
+              className="w-8 h-8 rounded border border-gray-300 flex-shrink-0"
               style={{ backgroundColor: color }}
             />
-            <div className="flex-1">
-              <p className="text-xs text-gray-500 uppercase tracking-wide">Current</p>
-              <p className="text-sm font-mono font-medium text-gray-800">{color}</p>
-            </div>
-          </div>
-
-          {/* Color Wheel & Saturation/Brightness */}
-          <div className="flex gap-3 mb-4">
-            {/* Color Wheel */}
-            <div
-              ref={colorWheelRef}
-              className="relative w-28 h-28 lg:w-32 lg:h-32 rounded-full cursor-crosshair flex-shrink-0"
-              style={{
-                background: 'conic-gradient(from 0deg, hsl(0, 100%, 50%), hsl(60, 100%, 50%), hsl(120, 100%, 50%), hsl(180, 100%, 50%), hsl(240, 100%, 50%), hsl(300, 100%, 50%), hsl(360, 100%, 50%))',
-              }}
-              onMouseDown={handleWheelMouseDown}
-              onTouchStart={handleWheelMouseDown}
-            >
-              {/* White overlay in center */}
-              <div className="absolute inset-4 rounded-full bg-white shadow-inner" />
-              {/* Hue indicator */}
-              <div
-                className="absolute w-4 h-4 rounded-full border-2 border-white shadow-lg"
-                style={{
-                  backgroundColor: `hsl(${hue}, 100%, 50%)`,
-                  left: `calc(50% + ${hueX}px - 8px)`,
-                  top: `calc(50% + ${hueY}px - 8px)`,
-                  pointerEvents: 'none',
-                }}
-              />
-            </div>
-
-            {/* Saturation/Brightness Square */}
-            <div
-              ref={satBrightRef}
-              className="relative flex-1 h-28 lg:h-32 rounded-lg cursor-crosshair overflow-hidden"
-              style={{
-                background: `linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, hsl(${hue}, 100%, 50%))`,
-              }}
-              onMouseDown={handleSBMouseDown}
-              onTouchStart={handleSBMouseDown}
-            >
-              {/* Saturation/Brightness indicator */}
-              <div
-                className="absolute w-4 h-4 rounded-full border-2 border-white shadow-lg"
-                style={{
-                  backgroundColor: color,
-                  left: `calc(${saturation}% - 8px)`,
-                  top: `calc(${100 - brightness}% - 8px)`,
-                  pointerEvents: 'none',
-                }}
-              />
-            </div>
-          </div>
-
-          {/* Hex Input */}
-          <div className="mb-4">
-            <label className="text-xs text-gray-500 uppercase tracking-wide mb-1 block">Hex Color</label>
             <input
               type="text"
               value={color}
@@ -291,60 +222,93 @@ const ColorPickerDropdown = ({ color, onChange, recentColors, onColorUsed }) => 
                   onChange(val);
                   if (val.length === 7) {
                     const hsl = hexToHsl(val);
-                    setHue(hsl.h);
-                    setSaturation(hsl.s);
-                    setBrightness(hsl.l);
+                    setHue(hsl.h); setSaturation(hsl.s); setBrightness(hsl.l);
                   }
                 }
               }}
-              className="w-full px-3 py-2 text-sm font-mono border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 px-2 py-1 text-xs font-mono border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
               placeholder="#000000"
             />
           </div>
 
+          {/* Color Wheel & Sat/Bright */}
+          <div className="flex gap-2 mb-3">
+            <div
+              ref={colorWheelRef}
+              className="relative rounded-full cursor-crosshair flex-shrink-0"
+              style={{
+                width: wheelSize, height: wheelSize,
+                background: 'conic-gradient(from 0deg, hsl(0,100%,50%), hsl(60,100%,50%), hsl(120,100%,50%), hsl(180,100%,50%), hsl(240,100%,50%), hsl(300,100%,50%), hsl(360,100%,50%))',
+              }}
+              onMouseDown={handleWheelMouseDown}
+              onTouchStart={handleWheelMouseDown}
+            >
+              <div className="absolute inset-3 rounded-full bg-white" />
+              <div
+                className="absolute w-3 h-3 rounded-full border-2 border-white shadow"
+                style={{
+                  backgroundColor: `hsl(${hue}, 100%, 50%)`,
+                  left: `calc(50% + ${hueX}px - 6px)`,
+                  top: `calc(50% + ${hueY}px - 6px)`,
+                  pointerEvents: 'none',
+                }}
+              />
+            </div>
+            <div
+              ref={satBrightRef}
+              className="relative flex-1 rounded cursor-crosshair overflow-hidden"
+              style={{
+                height: wheelSize,
+                background: `linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, hsl(${hue}, 100%, 50%))`,
+              }}
+              onMouseDown={handleSBMouseDown}
+              onTouchStart={handleSBMouseDown}
+            >
+              <div
+                className="absolute w-3 h-3 rounded-full border-2 border-white shadow"
+                style={{
+                  backgroundColor: color,
+                  left: `calc(${saturation}% - 6px)`,
+                  top: `calc(${100 - brightness}% - 6px)`,
+                  pointerEvents: 'none',
+                }}
+              />
+            </div>
+          </div>
+
           {/* Recent Colors */}
           {recentColors.length > 0 && (
-            <div className="mb-4">
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Recent</p>
+            <div className="mb-2">
+              <p className="text-[10px] text-gray-500 uppercase mb-1">Recent</p>
               <div className="flex flex-wrap gap-1">
-                {recentColors.slice(0, 10).map((recentColor, idx) => (
+                {recentColors.slice(0, 8).map((rc, idx) => (
                   <button
-                    key={`${recentColor}-${idx}`}
-                    onClick={() => selectColor(recentColor)}
-                    className={`w-6 h-6 rounded-md border-2 transition-all hover:scale-110 ${color === recentColor ? 'border-gray-900 ring-2 ring-gray-400' : 'border-gray-300'
-                      }`}
-                    style={{ backgroundColor: recentColor }}
-                    title={recentColor}
+                    key={`${rc}-${idx}`}
+                    onClick={() => selectColor(rc)}
+                    className={`w-5 h-5 rounded border transition-all hover:scale-110 ${color === rc ? 'border-gray-900 ring-1 ring-gray-400' : 'border-gray-300'}`}
+                    style={{ backgroundColor: rc }}
                   />
                 ))}
               </div>
             </div>
           )}
 
-          {/* Default Palette */}
+          {/* Compact Palette */}
           <div>
-            <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Palette</p>
-            <div className="grid grid-cols-5 gap-1">
-              {defaultPalette.map((paletteColor) => (
+            <p className="text-[10px] text-gray-500 uppercase mb-1">Palette</p>
+            <div className="grid grid-cols-10 gap-0.5">
+              {defaultPalette.map((pc) => (
                 <button
-                  key={paletteColor}
-                  onClick={() => selectColor(paletteColor)}
-                  className={`w-full aspect-square rounded-md border-2 transition-all hover:scale-105 ${color === paletteColor ? 'border-gray-900 ring-2 ring-gray-400' : 'border-gray-200'
-                    }`}
-                  style={{ backgroundColor: paletteColor }}
-                  title={paletteColor}
+                  key={pc}
+                  onClick={() => selectColor(pc)}
+                  className={`w-full aspect-square rounded-sm border transition-all hover:scale-110 ${color === pc ? 'border-gray-900 ring-1 ring-gray-400' : 'border-gray-200'}`}
+                  style={{ backgroundColor: pc }}
                 />
               ))}
             </div>
           </div>
         </div>
       )}
-
-      <style jsx>{`
-        .color-picker-dropdown {
-          -webkit-tap-highlight-color: transparent;
-        }
-      `}</style>
     </div>
   );
 };
