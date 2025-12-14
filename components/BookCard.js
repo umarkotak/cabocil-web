@@ -63,7 +63,7 @@ export default function BookCard({ oneBook }) {
                 {oneBook.tags && (
                   <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300">
                     <Tag size={10} />
-                    {oneBook.tags}
+                    {oneBook.tags.map((tag) => tag.name).join(", ")}
                   </span>
                 )}
               </div>
