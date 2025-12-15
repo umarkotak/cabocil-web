@@ -40,6 +40,7 @@ export default function Watch() {
   const [blockVideoRecomm, setBlockVideoRecomm] = useState(false)
   const [quizTs, setQuizTs] = useState(0)
   const [openRecomendations, setOpenRecomendations] = useState(true)
+  const [recommMode, setRecommMode] = useState('all') // 'all' or 'channel'
 
   const videoPlayerDivRef = useRef()
 
@@ -98,12 +99,24 @@ export default function Watch() {
 
     GetVideoDetail(router.query.video_id)
 
-    GetChannelVideos()
+    // GetChannelVideos() // Moved to dedicated useEffect
 
     if (localStorage && localStorage.getItem("CABOCIL:QUIZ:ENABLE") !== "off") {
       setQuizTs(Date.now())
     }
   }, [router])
+
+  useEffect(() => {
+    if (recommMode === 'all' && router.query.video_id) {
+      GetChannelVideos()
+    }
+  }, [recommMode, router.query.video_id])
+
+  useEffect(() => {
+    if (recommMode === 'channel' && videoDetail?.channel?.id) {
+      GetChannelVideos()
+    }
+  }, [recommMode, videoDetail?.channel?.id])
 
   async function GetVideoDetail(videoID) {
     try {
@@ -123,7 +136,14 @@ export default function Watch() {
 
   async function GetChannelVideos() {
     try {
+      let channelIds = []
+      if (recommMode === 'channel' && videoDetail?.channel?.id) {
+        channelIds = [videoDetail.channel.id]
+      }
+
       const response = await cabocilAPI.GetVideos("", {}, {
+        channel_ids: channelIds,
+        sort: "random",
         limit: 50
       })
       const body = await response.json()
@@ -264,10 +284,24 @@ export default function Watch() {
         </div>
       </div>
 
-      <div id="suggestion-content" className={`flex-none w-full ${openRecomendations ? "md:w-[402px]" : "md:w-[90px]"} flex flex-col gap-5 sm:h-[calc(100vh-60px)] sm:overflow-auto relative`}>
-        <div className='hidden md:flex sticky top-0 bg-background z-10'>
+      <div id="suggestion-content" className={`flex-none w-full ${openRecomendations ? "md:w-[402px]" : "md:w-[90px]"} flex flex-col gap-2 sm:h-[calc(100vh-60px)] sm:overflow-auto relative`}>
+        <div className='hidden md:flex sticky top-0 bg-background z-10 gap-2 py-1'>
           <Button size="sm7" onClick={() => { setOpenRecomendations(!openRecomendations) }}>
             {openRecomendations ? <ChevronRight size={10} /> : <ChevronLeft size={10} />}
+          </Button>
+          <Button
+            size="sm7"
+            className="text-xs px-2"
+            onClick={() => { setRecommMode('all') }}
+          >
+            All
+          </Button>
+          <Button
+            size="sm7"
+            className="text-xs px-2"
+            onClick={() => { setRecommMode('channel') }}
+          >
+            This Channel
           </Button>
         </div>
 
