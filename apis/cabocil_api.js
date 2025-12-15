@@ -153,6 +153,14 @@ class CabocilAPI {
     return this.Get(`/ytkidd/api/user/activities`, authToken, h, params)
   }
 
+  async GetRecentActivities(authToken, h, params) {
+    return this.Get(`/ytkidd/api/users/all_activities/recent`, authToken, h, params)
+  }
+
+  async GetUsers(authToken, h, params) {
+    return this.Get(`/ytkidd/api/users`, authToken, h, params)
+  }
+
   async GetProducts(authToken, h, params) {
     return this.Get(`/ytkidd/api/products`, authToken, h, params)
   }
@@ -171,6 +179,14 @@ class CabocilAPI {
 
   async PostUserStroke(authToken, h, params) {
     return this.Post(`/ytkidd/api/book/user_stroke`, authToken, h, params)
+  }
+
+  async GetPokiGames(authToken, h, params) {
+    return this.Get(`/ytkidd/api/poki/games`, authToken, h, params)
+  }
+
+  async GetPokiGameDetail(authToken, h, params) {
+    return this.Get(`/ytkidd/api/poki/games/detail`, authToken, h, params)
   }
 
   // REUSABLE
