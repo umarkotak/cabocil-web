@@ -33,7 +33,7 @@ const adminItems = [
   { key: "admin-item-5", title: "Users Activities", url: "/admin/users/activities", icon: GalleryHorizontalEnd },
 ]
 
-export function AppSidebar({ userData, isAdmin }) {
+export function AppSidebar({ userData, isAdmin, collapsible }) {
   const pathName = usePathname()
   const { state, open, setOpen, openMobile, setOpenMobile, isMobile, toggleSidebar } = useSidebar()
 
@@ -45,7 +45,7 @@ export function AppSidebar({ userData, isAdmin }) {
 
   return (
     <Sidebar
-      collapsible="icon"
+      collapsible={collapsible}
       variant="sidebar"
       className="border-none"
     >

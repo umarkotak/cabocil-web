@@ -29,6 +29,7 @@ export default function AppLayout({ children }) {
 
   const [padMain, setPadMain] = useState(true)
   const [showSidebarTrigger, setShowSidebarTrigger] = useState(true)
+  const [collapsible, setCollapsible] = useState("icon")
 
   useEffect(() => {
     if (!pathName) { return }
@@ -44,6 +45,16 @@ export default function AppLayout({ children }) {
       setOpen(false)
     } else {
       setOpen(true)
+    }
+
+    // collapsible
+    if (
+      (pathName.includes("/books") && pathName.includes("/read"))
+      || (pathName.includes("/workbooks") && pathName.includes("/read"))
+    ) {
+      setCollapsible("offcanvas")
+    } else {
+      setCollapsible("icon")
     }
 
     // add padding on content / not
@@ -134,11 +145,27 @@ export default function AppLayout({ children }) {
     return <Link href={pathName}><Button size="sm7" variant="ghost">{pathName}</Button></Link>
   }
 
+  function SidebarDecider() {
+    if (isMobile) {
+      return "w-full"
+    }
+
+    if (collapsible === "offcanvas") {
+      return "w-full"
+    }
+
+    if (open) {
+      return contentWidthOnSideOpen
+    }
+
+    return contentWidthOnSideClose
+  }
+
   return (
     <>
-      <AppSidebar userData={userData} isAdmin={isAdmin} />
+      <AppSidebar userData={userData} isAdmin={isAdmin} collapsible={collapsible} />
 
-      <div className={`${!isMobile ? open ? contentWidthOnSideOpen : contentWidthOnSideClose : "w-full"}`}>
+      <div className={`${SidebarDecider()}`}>
         <header className={`sticky top-0 flex justify-between shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-10 z-30 py-3 pb-2 px-3 bg-sidebar`}>
           <div className="flex items-center gap-2">
             {showSidebarTrigger && <SidebarTrigger />}

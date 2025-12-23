@@ -371,7 +371,7 @@ export default function Read() {
           {/* Controls */}
           <div className="absolute z-10 top-12 lg:top-2 left-2 lg:left-[200px] flex gap-1 rounded-lg shadow-sm px-1 py-0.5">
             <button
-              className="rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1 bg-zinc-100"
+              className="rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1 md:p-3 bg-zinc-100"
               onClick={toggleFullScreen}
               aria-label="Toggle fullscreen"
             >
@@ -389,9 +389,9 @@ export default function Read() {
             )}
           </div>
 
-          <div className="absolute z-10 top-12 lg:top-2 right-2 flex gap-1 rounded-lg shadow-sm px-1 py-0.5">
+          <div className="absolute z-10 top-12 lg:top-2 right-2 flex gap-1 md:gap-2 rounded-lg shadow-sm px-1 py-0.5">
             <button
-              className="rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1 bg-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1 md:p-3 bg-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={handlePrevPage}
               disabled={activePageNumber <= 1}
               aria-label="Previous page"
@@ -399,7 +399,7 @@ export default function Read() {
               <ArrowLeft size={18} className="text-black" />
             </button>
             <button
-              className="rounded-lg flex justify-start items-center gap-1 hover:scale-110 duration-500 py-1 px-3 bg-zinc-100 text-black text-sm"
+              className="rounded-lg flex justify-start items-center gap-1 hover:scale-110 duration-500 py-1 px-3 md:py-3 md:px-3 bg-zinc-100 text-black text-sm"
               onClick={toggleDrawer}
               aria-label="Open page selector"
             >
@@ -410,7 +410,7 @@ export default function Read() {
               </span>
             </button>
             <button
-              className="rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1 bg-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="rounded-lg flex justify-start items-center hover:scale-110 duration-500 p-1 md:p-3 bg-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed"
               onClick={handleNextPage}
               disabled={activePageNumber >= maxPageNumber}
               aria-label="Next page"
