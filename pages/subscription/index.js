@@ -105,7 +105,10 @@ const SubscriptionIndex = () => {
     if (!order.payment_expired_at) {
       return false;
     }
-    return new Date(order.payment_expired_at) < currentTime;
+    if (order.status === 'expired') {
+      return true;
+    }
+    return (new Date(order.payment_expired_at) < currentTime && order.status === 'initialized');
   };
 
   const getTimeRemaining = (expiredAt) => {
@@ -247,11 +250,10 @@ const SubscriptionIndex = () => {
                     <div
                       key={order.number}
                       onClick={() => handleOrderClick(order)}
-                      className={`group relative overflow-hidden rounded-2xl border-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm transition-all duration-300 ${
-                        isExpired && order.status === 'initialized'
-                          ? 'border-gray-200 dark:border-gray-800 opacity-60 cursor-not-allowed'
-                          : 'border-slate-200 dark:border-slate-800 hover:shadow-xl hover:-translate-y-1 hover:border-purple-200 dark:hover:border-purple-800 cursor-pointer'
-                      }`}
+                      className={`group relative overflow-hidden rounded-2xl border-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm transition-all duration-300 ${isExpired
+                        ? 'border-gray-200 dark:border-gray-800 opacity-60 cursor-not-allowed'
+                        : 'border-slate-200 dark:border-slate-800 hover:shadow-xl hover:-translate-y-1 hover:border-purple-200 dark:hover:border-purple-800 cursor-pointer'
+                        }`}
                     >
                       <div className="p-4">
                         <div className="flex justify-between items-start">
@@ -263,9 +265,9 @@ const SubscriptionIndex = () => {
                                   <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-purple-500 transition-colors" />
                                 )}
                               </div>
-                                <div className={`px-3 py-1 rounded-full text-xs font-medium border flex items-center gap-1 ${getStatusColor(order.status, isExpired)}`}>
+                              <div className={`px-3 py-1 rounded-full text-xs font-medium border flex items-center gap-1 ${getStatusColor(order.status, isExpired)}`}>
                                 {getStatusIcon(order.status)}
-                                {isExpired && order.status === 'initialized' ? 'Kadaluarsa' : order.human_status}
+                                {isExpired ? 'Kadaluarsa' : order.human_status}
                               </div>
                             </div>
                             <p className="text-sm text-slate-600 dark:text-slate-400 mb-3">{order.number}</p>
